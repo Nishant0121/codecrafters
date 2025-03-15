@@ -1,18 +1,27 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { Calendar, Download, Printer } from "lucide-react"
-import gsap from "gsap"
+import { useContext, useEffect } from "react";
+import { Calendar, Download, Printer } from "lucide-react";
+import gsap from "gsap";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { PortfolioOverview } from "@/components/portfolio/portfolio-overview"
-import { PortfolioPerformance } from "@/components/portfolio/portfolio-performance"
-import { AssetAllocation } from "@/components/portfolio/asset-allocation"
-import { RiskAssessment } from "@/components/portfolio/risk-assessment"
-import { DiversificationAnalysis } from "@/components/portfolio/diversification-analysis"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { PortfolioOverview } from "@/components/portfolio/portfolio-overview";
+import { PortfolioPerformance } from "@/components/portfolio/portfolio-performance";
+import { AssetAllocation } from "@/components/portfolio/asset-allocation";
+import { RiskAssessment } from "@/components/portfolio/risk-assessment";
+import { DiversificationAnalysis } from "@/components/portfolio/diversification-analysis";
+import { AppContext } from "@/context/appContext";
 
 export default function PortfolioPage() {
+  const { loginUser } = useContext(AppContext);
+
   useEffect(() => {
     // Animation for portfolio cards
     gsap.fromTo(
@@ -24,18 +33,22 @@ export default function PortfolioPage() {
         duration: 0.5,
         stagger: 0.1,
         ease: "power2.out",
-      },
-    )
+      }
+    );
 
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [])
+  }, []);
 
   return (
     <div className="container mx-auto px-4 pt-20">
       <div className="mb-8 flex flex-col gap-4 pt-8 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Portfolio Analysis</h1>
-          <p className="text-muted-foreground">Comprehensive view of your investment portfolio</p>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Portfolio Analysis
+          </h1>
+          <p className="text-muted-foreground">
+            Comprehensive view of your investment portfolio
+          </p>
         </div>
         <div className="flex items-center gap-4">
           <Button variant="outline" size="sm">
@@ -61,7 +74,8 @@ export default function PortfolioPage() {
           </CardHeader>
           <CardContent>
             <div className="text-sm text-green-500">
-              +$5,238.12 (22.5%) <span className="text-muted-foreground">YTD</span>
+              +$5,238.12 (22.5%){" "}
+              <span className="text-muted-foreground">YTD</span>
             </div>
           </CardContent>
         </Card>
@@ -84,7 +98,9 @@ export default function PortfolioPage() {
             <CardTitle className="text-2xl">68/100</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-sm text-muted-foreground">Moderately Aggressive</div>
+            <div className="text-sm text-muted-foreground">
+              Moderately Aggressive
+            </div>
           </CardContent>
         </Card>
 
@@ -94,7 +110,9 @@ export default function PortfolioPage() {
             <CardTitle className="text-2xl">72/100</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-sm text-muted-foreground">Well Diversified</div>
+            <div className="text-sm text-muted-foreground">
+              Well Diversified
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -123,5 +141,5 @@ export default function PortfolioPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
