@@ -16,12 +16,13 @@ import Pay from "./components/Pay";
 import LiveObjectDetection from "./components/imageClass";
 import Watchlist from "./components/Watchlist";
 import StockPage from "./components/StockPage";
-import MyInvestment from "./Tanishk/MyInvestment";
 import SIPCalculator from "./components/SIPCalculator";
 import CurrencyConverter from "./components/CurrencyConverter";
 import StockNews from "./components/StockNews"; // Import StockNews component
 import StockNewsResults from "./components/StocksNewsResults"; // Import StockNewsResults component
 import { sampleStocks } from "./Data/Stocks";
+import FinancialExpectations from "./components/FinancialExpectations";
+import StocksPrice from "./components/StockGraph";
 import { getUserFromFirestore } from "./firebase/functions";
 
 function App() {
@@ -61,7 +62,6 @@ function App() {
               element={<Watchlist stocks={sampleStocks} />}
             />
             <Route path="/watchlist/:symbol" element={<StockPage />} />
-            <Route path="/myinvestment" element={<MyInvestment />} />
             <Route path="/sip" element={<SIPCalculator />} />
             <Route path="/currency" element={<CurrencyConverter />} />
             <Route path="/news" element={<StockNews />} />{" "}
@@ -71,6 +71,17 @@ function App() {
               element={<StockNewsResults />}
             />{" "}
             {/* News Results Route */}
+            <Route path="/news" element={<StockNews />} />{" "}
+            {/* Search Bar Route */}
+            <Route
+              path="/news-results/:symbol"
+              element={<StockNewsResults />}
+            />{" "}
+            {/* News Results Route */}
+            <Route
+              path="/financial-expectations"
+              element={<FinancialExpectations />}
+            />
           </Routes>
         </main>
         {!hideNavbarFooter && <Footer />}
