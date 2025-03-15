@@ -1,7 +1,7 @@
 "use client"
 
 import { ArrowDown, ArrowUp, ExternalLink, RefreshCw } from "lucide-react"
-
+import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -75,10 +75,13 @@ export function MarketUpdates() {
                 trending={false}
               />
             </div>
-            <Button variant="outline" size="sm" className="w-full">
-              <ExternalLink className="mr-2 h-4 w-4" />
-              View All Markets
-            </Button>
+            <Link to= "/watchlist">
+              <Button variant="outline" size="sm" className="w-full">
+                <ExternalLink className="mr-2 h-4 w-4" />
+                View All Markets
+              </Button>
+            </Link>
+            
           </TabsContent>
           <TabsContent value="indices">
             <div className="space-y-4">

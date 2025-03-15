@@ -26,6 +26,8 @@ export default function PortfolioPage() {
         ease: "power2.out",
       },
     )
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [])
 
   return (
