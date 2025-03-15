@@ -19,6 +19,7 @@ import LiveObjectDetection from "./components/imageClass";
 import { sampleStocks } from "./Data/Stocks";
 import Watchlist from "./components/Watchlist";
 import StockPage from "./components/StockPage";
+import SIPCalculator from "./components/SIPCalculator";
 
 function App() {
   const { data } = useContext(AppContext);
@@ -52,6 +53,7 @@ function App() {
             <Route path="/pay" element={<Pay />} />
             <Route path="/watchlist" element={<Watchlist stocks={sampleStocks} />} />
             <Route path="/watchlist/:symbol" element={<StockPage />} />
+            <Route path="/sip" element={<SIPCalculator />} />
           </Routes>
         </main>
         {!hideNavbarFooter && <Footer />}
