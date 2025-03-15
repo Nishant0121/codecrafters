@@ -1,8 +1,8 @@
-import express from 'express';
-import cors from 'cors';
-import Razorpay from 'razorpay';
-import dotenv from 'dotenv';
-import crypto from 'crypto';
+import express from "express";
+import cors from "cors";
+import Razorpay from "razorpay";
+import dotenv from "dotenv";
+import crypto from "crypto";
 
 dotenv.config();
 
@@ -40,21 +40,19 @@ app.post("/order", async (req, res) => {
   }
 });
 
-app.post('/order/validate', (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+app.post("/order/validate", (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+    req.body;
 
-  // Generate the expected signature using HMAC SHA256
   const sha = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
   sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
-  
+
   const digest = sha.digest("hex");
 
-  // Compare the generated signature with the received signature
   if (digest !== razorpay_signature) {
     return res.status(400).json({ msg: "Transaction not legitimate!" });
   }
 
-  // If the signatures match, the payment is legitimate
   res.json({
     msg: "Payment Successful",
     orderId: razorpay_order_id,

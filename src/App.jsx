@@ -16,6 +16,7 @@ import Pay from "./components/Pay";
 import LiveObjectDetection from "./components/imageClass";
 import Watchlist from "./components/Watchlist";
 import StockPage from "./components/StockPage";
+import MyInvestment from "./Tanishk/MyInvestment";
 import SIPCalculator from "./components/SIPCalculator";
 import CurrencyConverter from "./components/CurrencyConverter";
 import StockNews from "./components/StockNews"; // Import StockNews component
@@ -55,6 +56,7 @@ function App() {
             <Route path="/pay" element={<Pay />} />
             <Route path="/watchlist" element={<Watchlist />} />
             <Route path="/watchlist/:symbol" element={<StockPage />} />
+            <Route path="/myinvestment" element={<MyInvestment />} />
             <Route path="/sip" element={<SIPCalculator />} />
             <Route path="/currency" element={<CurrencyConverter />} />
             <Route path="/news" element={<StockNews />} /> {/* Search Bar Route */}

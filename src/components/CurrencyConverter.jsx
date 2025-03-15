@@ -57,7 +57,7 @@ const CurrencyConverter = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-gray-900 to-black p-8 flex flex-col items-center justify-center text-white">
+    <div className="min-h-screen bg-gradient-to-r from-gray-900 to-black p-8 flex flex-col items-center justify-center text-white pt-15">
       <div className="w-full max-w-lg bg-gray-800 p-8 rounded-lg shadow-2xl">
         <h2 className="text-3xl font-bold text-center mb-6">Currency Converter</h2>
         <div className="space-y-6">
