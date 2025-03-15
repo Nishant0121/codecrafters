@@ -22,6 +22,7 @@ import CurrencyConverter from "./components/CurrencyConverter";
 import StockNews from "./components/StockNews"; // Import StockNews component
 import StockNewsResults from "./components/StocksNewsResults"; // Import StockNewsResults component
 import { sampleStocks } from "./Data/Stocks";
+import FinancialExpectations from "./components/FinancialExpectations";
 
 function App() {
   const { data } = useContext(AppContext);
@@ -62,6 +63,7 @@ function App() {
             <Route path="/currency" element={<CurrencyConverter />} />
             <Route path="/news" element={<StockNews />} /> {/* Search Bar Route */}
             <Route path="/news-results/:symbol" element={<StockNewsResults />} /> {/* News Results Route */}
+            <Route path="/financial-expectations" element={<FinancialExpectations />} />
           </Routes>
         </main>
         {!hideNavbarFooter && <Footer />}

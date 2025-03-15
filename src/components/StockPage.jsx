@@ -14,6 +14,7 @@ import {
   Legend 
 } from 'chart.js';
 import { sampleStocks } from '../Data/Stocks';
+import FinancialExpectations from './FinancialExpectations';
 
 // Register the necessary chart components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
@@ -328,6 +329,7 @@ const StockPage = () => {
           {/* News Section */}
           {renderNews()}
         </div>
+        <FinancialExpectations symbol={symbol} />
       </div>
     </div>
   );
