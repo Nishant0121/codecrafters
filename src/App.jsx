@@ -42,7 +42,7 @@ function App() {
           path="/watchlist"
           element={<Watchlist stocks={sampleStocks} />}
         />
-        <Route path="/watchlist/:symbol" element={<StockPage />} />
+        <Route path="/stocks/:symbol" element={<StockPage />} />
       </Route>
 
       {/* Fallback Route for Unmatched Paths */}
