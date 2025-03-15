@@ -17,7 +17,9 @@ const SIPCalculator = () => {
   const [riskLevel, setRiskLevel] = useState('all');
   const [fundType, setFundType] = useState('all');
   const [minSIPAmount, setMinSIPAmount] = useState('all');
-  const [theme, setTheme] = useState('dark');
+
+  // Dark mode is permanently enabled
+  const theme = 'dark';
 
   const handleCalculate = () => {
     const p = parseFloat(monthlyInvestment);
@@ -51,7 +53,10 @@ const SIPCalculator = () => {
     labels: ['Principal', 'Interest Earned'],
     datasets: [
       {
-        data: [parseFloat(monthlyInvestment) * parseInt(investmentDuration) * 12, totalInterest ? parseFloat(totalInterest) : 0],
+        data: [
+          parseFloat(monthlyInvestment) * parseInt(investmentDuration) * 12,
+          totalInterest ? parseFloat(totalInterest) : 0,
+        ],
         backgroundColor: ['#4caf50', '#ff9800'],
         borderWidth: 1,
       },
@@ -100,9 +105,9 @@ const SIPCalculator = () => {
   );
 
   return (
-    <div className={`min-h-screen p-8 flex flex-col lg:flex-row gap-8 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}>
+    <div className="min-h-screen p-8 pt-18 flex flex-col lg:flex-row gap-8 bg-gradient-to-br from-black to-gray-900 text-white">
       {/* SIP Calculator Section */}
-      <div className={`w-full lg:w-1/2 p-8 rounded-lg shadow-2xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+      <div className="w-full lg:w-1/2 p-8 rounded-2xl shadow-2xl bg-white/10 backdrop-blur-md border border-white/20">
         <h2 className="text-3xl font-bold text-center mb-6">SIP Calculator</h2>
         <div className="space-y-6">
           <div>
@@ -111,7 +116,7 @@ const SIPCalculator = () => {
               type="number"
               value={monthlyInvestment}
               onChange={(e) => setMonthlyInvestment(e.target.value)}
-              className="mt-1 block w-full px-4 py-2 border rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-500 bg-transparent"
+              className="mt-1 block w-full px-4 py-2 border rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-500 bg-transparent text-white"
             />
           </div>
           <div>
@@ -120,7 +125,7 @@ const SIPCalculator = () => {
               type="number"
               value={annualInterestRate}
               onChange={(e) => setAnnualInterestRate(e.target.value)}
-              className="mt-1 block w-full px-4 py-2 border rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-500 bg-transparent"
+              className="mt-1 block w-full px-4 py-2 border rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-500 bg-transparent text-white"
             />
           </div>
           <div>
@@ -129,7 +134,7 @@ const SIPCalculator = () => {
               type="number"
               value={investmentDuration}
               onChange={(e) => setInvestmentDuration(e.target.value)}
-              className="mt-1 block w-full px-4 py-2 border rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-500 bg-transparent"
+              className="mt-1 block w-full px-4 py-2 border rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-500 bg-transparent text-white"
             />
           </div>
           <div className="flex gap-4">
@@ -151,8 +156,12 @@ const SIPCalculator = () => {
         <animated.div style={fadeIn}>
           {totalAmount !== null && (
             <div className="mt-8">
-              <p className="text-lg font-medium">Total Investment Value: {formatCurrency(totalAmount)}</p>
-              <p className="text-lg font-medium mt-2">Total Interest Earned: {formatCurrency(totalInterest)}</p>
+              <p className="text-lg font-medium">
+                Total Investment Value: {formatCurrency(totalAmount)}
+              </p>
+              <p className="text-lg font-medium mt-2">
+                Total Interest Earned: {formatCurrency(totalInterest)}
+              </p>
 
               {/* Pie Chart */}
               <div className="mt-6">
@@ -171,7 +180,7 @@ const SIPCalculator = () => {
       </div>
 
       {/* Suggested SIP Plans Section */}
-      <div className={`w-full lg:w-1/2 p-8 rounded-lg shadow-2xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+      <div className="w-full lg:w-1/2 p-8 rounded-2xl shadow-2xl bg-white/10 backdrop-blur-md border border-white/20">
         <h2 className="text-3xl font-bold text-center mb-6">Suggested SIP Plans</h2>
         <div className="space-y-6">
           {/* Filters */}
@@ -179,52 +188,47 @@ const SIPCalculator = () => {
             <select
               value={riskLevel}
               onChange={(e) => setRiskLevel(e.target.value)}
-              className="p-2 border rounded-md bg-transparent"
+              className="p-2 border rounded-md bg-transparent text-white"
             >
-              <option value="all">All Risk Levels</option>
-              <option value="low">Low Risk</option>
-              <option value="medium">Medium Risk</option>
-              <option value="high">High Risk</option>
+              <option value="all" className='text-black'>All Risk Levels</option>
+              <option value="low" className='text-black'>Low Risk</option>
+              <option value="medium" className='text-black'>Medium Risk</option>
+              <option value="high" className='text-black'>High Risk</option>
             </select>
             <select
               value={fundType}
               onChange={(e) => setFundType(e.target.value)}
-              className="p-2 border rounded-md bg-transparent"
+              className="p-2 border rounded-md bg-transparent text-white"
             >
-              <option value="all">All Fund Types</option>
-              <option value="equity">Equity</option>
-              <option value="hybrid">Hybrid</option>
+              <option value="all" className='text-black'>All Fund Types</option>
+              <option value="equity" className='text-black'>Equity</option>
+              <option value="hybrid" className='text-black'>Hybrid</option>
             </select>
             <select
               value={minSIPAmount}
               onChange={(e) => setMinSIPAmount(e.target.value)}
-              className="p-2 border rounded-md bg-transparent"
+              className="p-2 border rounded-md bg-transparent text-white"
             >
-              <option value="all">All Min SIP</option>
-              <option value="500">₹500</option>
-              <option value="1000">₹1000</option>
+              <option value="all" className='text-black'>All Min SIP</option>
+              <option value="500" className='text-black'>₹500</option>
+              <option value="1000" className='text-black'>₹1000</option>
             </select>
           </div>
 
           {/* Plan Cards */}
           {filteredPlans.map((plan, index) => (
-            <div key={index} className={`p-6 rounded-lg hover:shadow-lg transition-all duration-300 ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'}`}>
+            <div
+              key={index}
+              className="p-6 rounded-lg hover:shadow-lg transition-all duration-300 bg-gray-700 hover:bg-gray-600"
+            >
               <h3 className="text-xl font-semibold">{plan.name}</h3>
-              <p className="text-gray-500 mt-2">Type: {plan.type}</p>
-              <p className="text-gray-500">Risk: {plan.risk}</p>
-              <p className="text-gray-500">Minimum SIP: ₹{plan.minSIP}</p>
+              <p className="text-gray-300 mt-2">Type: {plan.type}</p>
+              <p className="text-gray-300">Risk: {plan.risk}</p>
+              <p className="text-gray-300">Minimum SIP: ₹{plan.minSIP}</p>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Theme Toggle */}
-      <button
-        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        className="fixed bottom-4 right-4 p-3 bg-indigo-700 text-white rounded-full shadow-lg hover:bg-indigo-800"
-      >
-        {theme === 'dark' ? '🌞' : '🌙'}
-      </button>
     </div>
   );
 };
