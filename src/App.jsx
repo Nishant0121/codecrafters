@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -16,17 +16,21 @@ import ErrorPage from "./components/errorpage";
 import ChatBot from "./components/Chatbot";
 import Pay from "./components/Pay";
 import LiveObjectDetection from "./components/imageClass";
-import {sampleStocks} from "./Data/Stocks"
+import { sampleStocks } from "./Data/Stocks";
 import Watchlist from "./components/Watchlist";
 import StockPage from "./components/StockPage";
 
 function App() {
   const { data } = useContext(AppContext);
+  const location = useLocation();
+
+  // Hide Navbar and Footer on Login and Register pages
+  const hideNavbarFooter = location.pathname === "/login" || location.pathname === "/register";
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
       <div className="relative flex min-h-screen flex-col">
-        <Navbar />
+        {!hideNavbarFooter && <Navbar />}
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -35,7 +39,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/investments" element={<InvestmentsPage />} />
             <Route path="/portfolio" element={<PortfolioPage />} />
-            <Route path="about" element={<LiveObjectDetection />} />
+            <Route path="/about" element={<LiveObjectDetection />} />
             <Route path="*" element={<ErrorPage />} />
             <Route path="/chat" element={<ChatBot />} />
             <Route path="/pay" element={<Pay />} />
@@ -43,7 +47,7 @@ function App() {
             <Route path="/watchlist/:symbol" element={<StockPage />} />
           </Routes>
         </main>
-        <Footer />
+        {!hideNavbarFooter && <Footer />}
       </div>
     </ThemeProvider>
   );
