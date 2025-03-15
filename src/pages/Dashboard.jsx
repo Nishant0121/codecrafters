@@ -26,7 +26,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InvestmentSummary } from "@/components/dashboard/investment-summary";
 import { MarketUpdates } from "@/components/dashboard/market-updates";
-import { PortfolioAllocation } from "@/components/dashboard/portfolio-allocation";
+import StockNews from "@/components/dashboard/portfolio-allocation";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { WatchlistStocks } from "@/components/dashboard/watchlist-stocks";
 
@@ -44,13 +44,13 @@ export default function DashboardPage() {
         ease: "power1.out",
       }
     );
-
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   return (
     <div className="container mx-auto px-4 pt-20">
-      <div className="mb-8 flex flex-col gap-4 pt-8 md:flex-row md:items-center md:justify-between">
+      {/* Header */}
+      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground">
@@ -69,12 +69,11 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Cards Grid */}
       <div className="mb-8 grid gap-4 md:grid-cols-3">
         <Card className="dashboard-card">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Portfolio Value
-            </CardTitle>
+          <CardHeader className="flex items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Total Portfolio Value</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -88,10 +87,8 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="dashboard-card">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Monthly Returns
-            </CardTitle>
+          <CardHeader className="flex items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Monthly Returns</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -105,17 +102,13 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="dashboard-card">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Available Cash
-            </CardTitle>
+          <CardHeader className="flex items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Available Cash</CardTitle>
             <Wallet className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">$4,780.00</div>
-            <div className="mt-1 text-xs text-muted-foreground">
-              Ready to invest
-            </div>
+            <div className="mt-1 text-xs text-muted-foreground">Ready to invest</div>
             <div className="mt-3 flex items-center justify-between">
               <Button size="sm" variant="outline" className="h-8">
                 <CreditCard className="mr-2 h-3 w-3" />
@@ -130,6 +123,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
+      {/* Tabs Section */}
       <Tabs defaultValue="summary" className="space-y-4">
         <TabsList>
           <TabsTrigger value="summary">Summary</TabsTrigger>
@@ -142,11 +136,10 @@ export default function DashboardPage() {
             <div className="dashboard-card col-span-7 md:col-span-4">
               <InvestmentSummary />
             </div>
-            <div className="dashboard-card col-span-7 md:col-span-3">
-              <PortfolioAllocation />
+            <div className="dashboard-card col-span-7 md:col-span-3 items-center justify-center">   
+              <StockNews />
             </div>
           </div>
-
           <div className="grid gap-4 md:grid-cols-2">
             <div className="dashboard-card">
               <MarketUpdates />
@@ -161,19 +154,15 @@ export default function DashboardPage() {
           <Card className="dashboard-card">
             <CardHeader>
               <CardTitle>Your Investments</CardTitle>
-              <CardDescription>
-                A detailed view of all your current investments
-              </CardDescription>
+              <CardDescription>A detailed view of all your current investments</CardDescription>
             </CardHeader>
             <CardContent>
               <WatchlistStocks />
             </CardContent>
             <CardFooter>
               <Button variant="outline" asChild className="w-full">
-                {/* Using react-router-dom's Link with "to" */}
                 <Link to="/investments">
-                  View All Investments{" "}
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  View All Investments <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </CardFooter>
@@ -184,9 +173,7 @@ export default function DashboardPage() {
           <Card className="dashboard-card">
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>
-                Your account activity and transaction history
-              </CardDescription>
+              <CardDescription>Your account activity and transaction history</CardDescription>
             </CardHeader>
             <CardContent>
               <RecentTransactions detailed />
@@ -194,8 +181,7 @@ export default function DashboardPage() {
             <CardFooter>
               <Button variant="outline" asChild className="w-full">
                 <Link to="/transactions">
-                  View All Transactions{" "}
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  View All Transactions <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </CardFooter>
