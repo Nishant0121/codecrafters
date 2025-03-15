@@ -26,6 +26,14 @@ function App() {
 
   // Hide Navbar and Footer on Login and Register pages
   const hideNavbarFooter = location.pathname === "/login" || location.pathname === "/register";
+  const { setloginUser } = useContext(AppContext);
+
+  useEffect(() => {
+    const user = localStorage.getItem("ADuser");
+    if (user) {
+      setloginUser(JSON.parse(user));
+    }
+  }, [setloginUser]); // Added dependency array
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
