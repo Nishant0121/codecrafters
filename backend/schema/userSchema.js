@@ -13,15 +13,15 @@ const ProfileSchema = new mongoose.Schema({
     unique: true,
   },
   topStocks: {
-    type: [String], // Array of stock symbols or names
+    type: [String],
     default: [],
   },
   stocks: [
     {
       quantity: { type: Number, required: true },
-      symbol: { type: String, required: true }, // Stock symbol or name
-      buyPrice: { type: Number, required: true }, // Price at which the stock was bought
-      purchaseDate: { type: Date, required: true, default: Date.now }, // Date of purchase
+      symbol: { type: String, required: true },
+      buyPrice: { type: Number, required: true },
+      purchaseDate: { type: Date, required: true, default: Date.now },
     },
   ],
 });
@@ -31,11 +31,11 @@ const WalletSchema = new mongoose.Schema(
     uid: {
       type: String,
       required: true,
-      unique: true, // Each user can have only one wallet
+      unique: true,
     },
     balance: {
       type: Number,
-      default: 0, // Default balance is 0
+      default: 0,
     },
     transactions: [
       {

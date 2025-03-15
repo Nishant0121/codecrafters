@@ -9,26 +9,23 @@ export const addStock = async (req, res) => {
   try {
     const { uid, quantity, symbol, buyPrice, purchaseDate } = req.body;
 
-    // Find the user profile or create a new one if it doesn't exist
     let profile = await Profile.findOne({ uid });
 
     if (!profile) {
       profile = new Profile({
         uid,
         stocks: [],
-        topStocks: [], // Assuming topStocks is also part of the schema
+        topStocks: [],
       });
     }
 
-    // Add the new stock to the stocks array
     profile.stocks.push({
       quantity,
       symbol,
       buyPrice,
-      purchaseDate: purchaseDate || new Date(), // Default to current date if not provided
+      purchaseDate: purchaseDate || new Date(),
     });
 
-    // Save the profile (new or updated)
     await profile.save();
 
     res.status(200).json({ message: "Stock added successfully", profile });
@@ -42,7 +39,6 @@ export const updateWallet = async (req, res) => {
   try {
     const { uid, amount, type } = req.body;
 
-    // Validate input
     if (
       !uid ||
       typeof amount !== "number" ||
@@ -54,17 +50,14 @@ export const updateWallet = async (req, res) => {
     let wallet = await Wallet.findOne({ uid });
 
     if (!wallet) {
-      // Create new wallet if not found
       wallet = new Wallet({
         uid,
-        balance: type === "credit" ? amount : 0, // Only add if it's a credit transaction
+        balance: type === "credit" ? amount : 0,
         transactions: [{ amount, type }],
       });
     } else {
-      // Convert balance to number to prevent concatenation issues
       wallet.balance = Number(wallet.balance);
 
-      // Update balance correctly
       if (type === "credit") {
         wallet.balance += amount;
       } else if (type === "debit") {
@@ -87,7 +80,7 @@ export const updateWallet = async (req, res) => {
 
 export const getWalletBalance = async (req, res) => {
   try {
-    const { uid } = req.params; // Extract user ID from request parameters
+    const { uid } = req.params;
 
     if (!uid) {
       return res.status(400).json({ message: "User ID is required" });
@@ -105,5 +98,3 @@ export const getWalletBalance = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-// export const recommendStocks = async (req, res) => {
