@@ -21,6 +21,7 @@ import SIPCalculator from "./components/SIPCalculator";
 import CurrencyConverter from "./components/CurrencyConverter";
 import StockNews from "./components/StockNews"; // Import StockNews component
 import StockNewsResults from "./components/StocksNewsResults"; // Import StockNewsResults component
+import { sampleStocks } from "./Data/Stocks";
 
 function App() {
   const { data } = useContext(AppContext);
@@ -54,7 +55,7 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
             <Route path="/chat" element={<ChatBot />} />
             <Route path="/pay" element={<Pay />} />
-            <Route path="/watchlist" element={<Watchlist />} />
+            <Route path="/watchlist" element={<Watchlist stocks={sampleStocks} />} />
             <Route path="/watchlist/:symbol" element={<StockPage />} />
             <Route path="/myinvestment" element={<MyInvestment />} />
             <Route path="/sip" element={<SIPCalculator />} />
