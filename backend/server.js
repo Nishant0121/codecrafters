@@ -6,51 +6,62 @@ import authRoutes from "./routes/authRoutes.js";
 import stockRoutes from "./routes/stockRoute.js";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+import jwt from "jsonwebtoken";
 import cors from "cors";
+
 dotenv.config();
 
 const app = express();
 
-app.use(cors());
-
+// CORS Middleware
 app.use(
   cors({
     origin: "http://localhost:5173",
   })
 );
 
+// Middleware
 app.use(bodyParser.json());
+app.use(express.json());
 
 const PORT = process.env.PORT || 9000;
 
-// MONGOURL= mongodb+srv://Nishant0121:nishant0121@ad.wmpdx.mongodb.net/?retryWrites=true&w=majority&appName=AD
-
+// MongoDB Connection
 mongoose
-  .connect(
-    process.env.MONGOURL ||
-      "mongodb+srv://Nishant0121:nishant0121@ad.wmpdx.mongodb.net/?retryWrites=true&w=majority&appName=AD"
-  )
+  .connect(process.env.MONGOURL)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log(err));
-
-app.use(express.json());
-
+// JWT Token Generator Function
 const generateToken = (payload, expiresIn = "1h") => {
   try {
-    return jwt.sign(payload, SECRET_KEY, { expiresIn });
+    return jwt.sign(payload, process.env.JWT_SECRET || "SECRET_KEY", {
+      expiresIn,
+    });
   } catch (error) {
     console.error("Error generating token:", error);
     return null;
   }
 };
-const user = { id: "12345", email: "user@example.com", role: "admin" };
-app.get("/jwt", generateToken(user));
 
+// Routes
 app.use("/api", apiRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/stock", stockRoutes);
 
+// JWT Route
+app.get("/jwt", (req, res) => {
+  const user = { id: "12345", email: "user@example.com", role: "admin" };
+  const token = generateToken(user);
+
+  if (!token) {
+    return res.status(500).json({ error: "Failed to generate token" });
+  }
+
+  res.json({ token });
+});
+
+// Start Server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
