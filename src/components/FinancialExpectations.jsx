@@ -5,8 +5,8 @@ const FinancialExpectations = ({ symbol }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_KEY = "57XDMwSzyGM9UgKTi3oFYLtm1Uc9oQPB"; // Replace with your actual API key
-
+  //const API_KEY = "57XDMwSzyGM9UgKTi3oFYLtm1Uc9oQPB"; // Replace with your actual API key
+  const API_KEY = "";
   // https://financialmodelingprep.com/stable/analyst-estimates?symbol=AAPL&apikey=57XDMwSzyGM9UgKTi3oFYLtm1Uc9oQPB
 
   useEffect(() => {
