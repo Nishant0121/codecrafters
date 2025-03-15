@@ -25,6 +25,7 @@ const Watchlist = ({ stocks = [] }) => {
       </h1>
       <div className="space-y-5" ref={watchlistRef}>
         {stocks.map((stock) => {
+          console.log(stock)
           const open = stock.open ?? 0;
           const close = stock.close ?? 0;
           const change = open !== 0 ? ((close - open) / open) * 100 : 0;
@@ -46,8 +47,9 @@ const Watchlist = ({ stocks = [] }) => {
               </div>
 
               {/* Price & Change */}
+              <div className="flex flex-row gap-9 items-end">
               <div className="flex flex-col items-end">
-                <span className="text-lg font-semibold text-white">${close.toFixed(2)}</span>
+                <span className="text-lg font-semibold text-white">${close}</span>
                 <span className={`text-sm font-medium ${change >= 0 ? "text-green-400" : "text-red-400"}`}>
                   {change >= 0 ? "+" : ""}
                   {change.toFixed(2)}%
@@ -61,6 +63,7 @@ const Watchlist = ({ stocks = [] }) => {
               >
                 View Details →
               </Link>
+              </div>
             </div>
           );
         })}

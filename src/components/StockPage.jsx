@@ -187,7 +187,7 @@ const StockPage = () => {
   };
 
   return (
-    <div className="w-screen p-6 bg-gray-900 min-h-screen pt-15">
+    <div className="w-screen p-6 bg-gray-900 min-h-screen">
       <h2 className="text-3xl font-bold text-center mb-8 text-white">{stock.name}</h2>
 
       {/* Grid Layout for Charts and Data */}
