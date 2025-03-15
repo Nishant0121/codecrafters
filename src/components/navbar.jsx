@@ -1,16 +1,18 @@
 // "use client"  // Removed since it's not needed in plain React
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Alternative for Next.js Link in React
 import { Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { AppContext } from "@/context/appContext";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const { loginUser } = useContext(AppContext);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,19 +22,23 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  console.log(loginUser);
+
   const navItems = [
     { name: "Home", href: "/" },
     { name: "Dashboard", href: "/dashboard" },
     { name: "Investments", href: "/investments" },
     { name: "Portfolio", href: "/portfolio" },
-    { name: "Market", href: "/market" },
+    { name: "Watchlist", href: "/watchlist" },
   ];
 
   return (
     <header
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-300",
-        isScrolled ? "bg-background/80 backdrop-blur-md shadow-sm" : "bg-transparent"
+        isScrolled
+          ? "bg-background/80 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
       )}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -57,9 +63,20 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" className="hidden md:flex">
-            Sign In
-          </Button>
+          {loginUser ? (
+            <Link to="/profile" variant="outline" size="sm" className="hidden">
+              Profile
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              variant="outline"
+              size="sm"
+              className="hidden md:flex"
+            >
+              Sign In
+            </Link>
+          )}
           <Button size="sm" className="hidden md:flex">
             Get Started
           </Button>
@@ -74,13 +91,23 @@ export function Navbar() {
             <SheetContent side="right">
               <nav className="grid gap-6 text-lg font-medium">
                 {navItems.map((item) => (
-                  <Link key={item.name} to={item.href} className="hover:text-primary">
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="hover:text-primary"
+                  >
                     {item.name}
                   </Link>
                 ))}
-                <Button size="sm" className="mt-4">
-                  Sign In
-                </Button>
+                {loginUser ? (
+                  <Link to="/profile" size="sm" className="mt-4">
+                    Profile
+                  </Link>
+                ) : (
+                  <Link to="/login" size="sm" className="mt-4">
+                    Sign In
+                  </Link>
+                )}
                 <Button size="sm" variant="outline">
                   Get Started
                 </Button>

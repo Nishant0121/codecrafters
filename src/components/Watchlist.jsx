@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Briefcase } from "lucide-react";
+import { gsap } from "gsap";
 
 const Watchlist = ({ stocks = [] }) => {
+  const watchlistRef = useRef(null);
+
+  useEffect(() => {
+    if (watchlistRef.current) {
+      gsap.fromTo(
+        watchlistRef.current.children,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", stagger: 0.1 }
+      );
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl font-semibold text-center mb-6">
-        Stock Watchlist
+    <div className="max-w-5xl mx-auto p-6 mt-12">
+      <h1 className="text-3xl font-bold text-center text-white mb-8 tracking-wide">
+        Your Stock Watchlist
       </h1>
-      <div className="space-y-4">
+      <div className="space-y-5" ref={watchlistRef}>
         {stocks.map((stock) => {
-          // Ensure values are defined, otherwise fallback to 0
+          console.log(stock)
           const open = stock.open ?? 0;
           const close = stock.close ?? 0;
           const change = open !== 0 ? ((close - open) / open) * 100 : 0;
@@ -18,29 +33,24 @@ const Watchlist = ({ stocks = [] }) => {
           return (
             <div
               key={stock.symbol}
-              className="flex justify-between items-center p-4 bg-gray-800 text-white rounded-md shadow-md hover:bg-gray-700 cursor-pointer"
+              className="flex justify-between items-center p-5 rounded-xl bg-white/10 backdrop-blur-md shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]"
             >
               {/* Symbol & Name */}
-              <div className="flex items-center space-x-3">
-                <Briefcase className="w-6 h-6 text-blue-400" />
+              <div className="flex items-center space-x-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/20 text-blue-300">
+                  <Briefcase className="w-6 h-6" />
+                </div>
                 <div>
-                  <span className="font-medium">{stock.symbol}</span>
-                  {stock.name && (
-                    <p className="text-xs text-gray-300">{stock.name}</p>
-                  )}
+                  <span className="text-lg font-medium text-white">{stock.symbol}</span>
+                  {stock.name && <p className="text-xs text-gray-400">{stock.name}</p>}
                 </div>
               </div>
 
               {/* Price & Change */}
+              <div className="flex flex-row gap-9 items-end">
               <div className="flex flex-col items-end">
-                <span className="text-sm font-semibold">
-                  ₹{close.toFixed(2)}
-                </span>
-                <span
-                  className={`text-xs ${
-                    change >= 0 ? "text-green-400" : "text-red-400"
-                  }`}
-                >
+                <span className="text-lg font-semibold text-white">${close}</span>
+                <span className={`text-sm font-medium ${change >= 0 ? "text-green-400" : "text-red-400"}`}>
                   {change >= 0 ? "+" : ""}
                   {change.toFixed(2)}%
                 </span>
@@ -49,10 +59,11 @@ const Watchlist = ({ stocks = [] }) => {
               {/* View Details Link */}
               <Link
                 to={`/watchlist/${stock.symbol}`}
-                className="text-blue-400 hover:underline"
+                className="text-blue-400 text-sm font-medium hover:underline transition-all"
               >
-                View Details
+                View Details →
               </Link>
+              </div>
             </div>
           );
         })}

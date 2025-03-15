@@ -27,6 +27,8 @@ export default function InvestmentsPage() {
         ease: "power2.out",
       },
     )
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [])
 
   return (

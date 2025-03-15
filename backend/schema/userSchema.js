@@ -26,6 +26,30 @@ const ProfileSchema = new mongoose.Schema({
   ],
 });
 
+const WalletSchema = new mongoose.Schema(
+  {
+    uid: {
+      type: String,
+      required: true,
+      unique: true, // Each user can have only one wallet
+    },
+    balance: {
+      type: Number,
+      default: 0, // Default balance is 0
+    },
+    transactions: [
+      {
+        amount: Number,
+        type: { type: String, enum: ["credit", "debit"], required: true },
+        timestamp: { type: Date, default: Date.now },
+      },
+    ],
+  },
+  { timestamps: true }
+);
+
+export const Wallet = mongoose.model("Wallet", WalletSchema);
+
 export const Profile = mongoose.model("Profile", ProfileSchema);
 
 export const User = mongoose.model("User", UserSchema);

@@ -1,5 +1,5 @@
 import { Readable } from "stream";
-import { User } from "../model/userSchema.js";
+import { User } from "../schema/userSchema.js";
 import { google } from "googleapis";
 
 const auth = new google.auth.GoogleAuth({
