@@ -19,6 +19,7 @@ import LiveObjectDetection from "./components/imageClass";
 import { sampleStocks } from "./Data/Stocks";
 import Watchlist from "./components/Watchlist";
 import StockPage from "./components/StockPage";
+import MyInvestment from "./Tanishk/MyInvestment";
 import SIPCalculator from "./components/SIPCalculator";
 import CurrencyConverter from "./components/CurrencyConverter";
 
@@ -58,6 +59,7 @@ function App() {
               element={<Watchlist stocks={sampleStocks} />}
             />
             <Route path="/watchlist/:symbol" element={<StockPage />} />
+            <Route path="/myinvestment" element={<MyInvestment />} />
             <Route path="/sip" element={<SIPCalculator />} />
             <Route path="/currency" element={<CurrencyConverter />} />
           </Routes>

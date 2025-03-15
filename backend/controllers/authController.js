@@ -32,14 +32,12 @@ export const uploadFile = async (req, res) => {
       parents: ["1rG7UtCJQih2TWs1WBPKnh9PKKeT1vp6X"],
     };
 
-    // Convert buffer to a readable stream
     const bufferStream = new Readable();
-    bufferStream.push(req.file.buffer); // Push the buffer into the stream
-    bufferStream.push(null); // End the stream
-
+    bufferStream.push(req.file.buffer);
+    bufferStream.push(null);
     const media = {
       mimeType: req.file.mimetype,
-      body: bufferStream, // Pass the readable stream here
+      body: bufferStream,
     };
 
     const file = await drive.files.create({
@@ -65,7 +63,6 @@ export const uploadImage = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 
-    // Check if uploaded file is an image
     const allowedMimeTypes = [
       "image/jpeg",
       "image/png",
@@ -79,11 +76,10 @@ export const uploadImage = async (req, res) => {
     }
 
     const fileMetadata = {
-      name: req.file.originalname, // Keep the original file name
-      parents: ["1rG7UtCJQih2TWs1WBPKnh9PKKeT1vp6X"], // Change to your Drive folder ID
+      name: req.file.originalname,
+      parents: ["1rG7UtCJQih2TWs1WBPKnh9PKKeT1vp6X"],
     };
 
-    // Convert buffer to a readable stream
     const bufferStream = new Readable();
     bufferStream.push(req.file.buffer);
     bufferStream.push(null);
@@ -93,11 +89,10 @@ export const uploadImage = async (req, res) => {
       body: bufferStream,
     };
 
-    // Upload image to Google Drive
     const file = await drive.files.create({
       resource: fileMetadata,
       media: media,
-      fields: "id", // Get file ID
+      fields: "id",
     });
 
     if (!file.data || !file.data.id) {
@@ -106,13 +101,11 @@ export const uploadImage = async (req, res) => {
         .json({ message: "Failed to upload image to Google Drive" });
     }
 
-    // Make the image publicly accessible
     await drive.permissions.create({
       fileId: file.data.id,
       requestBody: { role: "reader", type: "anyone" },
     });
 
-    // Generate the image URL
     const imageUrl = `https://drive.google.com/uc?id=${file.data.id}`;
 
     res.json({ url: imageUrl });
