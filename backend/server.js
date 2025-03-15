@@ -5,11 +5,20 @@ import apiRoutes from "./routes/apiRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-
+import cors from "cors";
 // Load environment variables
 dotenv.config();
 
 const app = express();
+
+app.use(cors());
+
+// OR set specific origins (recommended for security)
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow requests only from this origin
+  })
+);
 
 app.use(bodyParser.json());
 
