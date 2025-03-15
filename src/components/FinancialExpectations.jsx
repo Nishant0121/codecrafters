@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const FinancialExpectations = ({ symbol }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  //const API_KEY = "57XDMwSzyGM9UgKTi3oFYLtm1Uc9oQPB"; // Replace with your actual API key
-  const API_KEY = "";
-  // https://financialmodelingprep.com/stable/analyst-estimates?symbol=AAPL&apikey=57XDMwSzyGM9UgKTi3oFYLtm1Uc9oQPB
+  const API_KEY = "57XDMwSzyGM9UgKTi3oFYLtm1Uc9oQPB"; // Replace with your actual API key
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,9 +24,7 @@ const FinancialExpectations = ({ symbol }) => {
         }
 
         const result = await response.json();
-        console.log(result); // Check the structure of the result
 
-        // Check if the data returned is an array
         if (Array.isArray(result)) {
           setData(result);
         } else {
@@ -39,49 +40,100 @@ const FinancialExpectations = ({ symbol }) => {
     fetchData();
   }, [symbol]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p className="text-center text-white">Loading...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
+
+  // Prepare chart data for comparison
+  const chartData = {
+    labels: data.map((item) => item.date),
+    datasets: [
+      {
+        label: "Revenue (Low)",
+        data: data.map((item) => item.revenueLow),
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        fill: true,
+      },
+      {
+        label: "Revenue (High)",
+        data: data.map((item) => item.revenueHigh),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        fill: true,
+      },
+      {
+        label: "Revenue (Avg)",
+        data: data.map((item) => item.revenueAvg),
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.2)',
+        fill: true,
+      },
+    ],
+  };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold text-center mb-6">Financial Expectations</h1>
-      {data.map((item, index) => (
-        <div key={index} className="mb-8 p-6 bg-white shadow-md rounded-md">
-          <h2 className="text-xl font-semibold">{item.date}</h2>
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <div className="p-4 bg-gray-50 rounded-md">
-              <h3 className="text-lg font-medium">Revenue</h3>
-              <p>Low: ${item.revenueLow.toLocaleString()}</p>
-              <p>High: ${item.revenueHigh.toLocaleString()}</p>
-              <p>Avg: ${item.revenueAvg.toLocaleString()}</p>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-md">
-              <h3 className="text-lg font-medium">EBITDA</h3>
-              <p>Low: ${item.ebitdaLow.toLocaleString()}</p>
-              <p>High: ${item.ebitdaHigh.toLocaleString()}</p>
-              <p>Avg: ${item.ebitdaAvg.toLocaleString()}</p>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-md">
-              <h3 className="text-lg font-medium">EBIT</h3>
-              <p>Low: ${item.ebitLow.toLocaleString()}</p>
-              <p>High: ${item.ebitHigh.toLocaleString()}</p>
-              <p>Avg: ${item.ebitAvg.toLocaleString()}</p>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-md">
-              <h3 className="text-lg font-medium">Net Income</h3>
-              <p>Low: ${item.netIncomeLow.toLocaleString()}</p>
-              <p>High: ${item.netIncomeHigh.toLocaleString()}</p>
-              <p>Avg: ${item.netIncomeAvg.toLocaleString()}</p>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-md">
-              <h3 className="text-lg font-medium">EPS</h3>
-              <p>Low: {item.epsLow}</p>
-              <p>High: {item.epsHigh}</p>
-              <p>Avg: {item.epsAvg}</p>
-            </div>
+    <div className="container mx-auto p-6  rounded-lg shadow-2xl mt-10">
+      <h1 className="text-3xl font-bold text-center text-white mb-8">Financial Expectations for {symbol}</h1>
+
+      {/* Flexbox container for table and chart */}
+      <div className="flex flex-col lg:flex-row gap-8">
+
+        {/* Financial Data Table Section */}
+        <div className="flex-1 overflow-x-auto bg-white/10 rounded-lg shadow-xl">
+          <table className="min-w-full table-auto text-white">
+            <thead className=" bg-white/10 text-lg">
+              <tr>
+                <th className="px-6 py-4 text-left">Metric</th>
+                <th className="px-6 py-4 text-left">Low</th>
+                <th className="px-6 py-4 text-left">High</th>
+                <th className="px-6 py-4 text-left">Avg</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white/10 text-sm">
+              {data.map((item, index) => (
+                <tr key={index} className="border-t border-gray-700 hover:bg-gray-700 transition-all">
+                  <td className="px-6 py-4">{item.date}</td>
+                  <td className="px-6 py-4">{item.revenueLow.toLocaleString()}</td>
+                  <td className="px-6 py-4">{item.revenueHigh.toLocaleString()}</td>
+                  <td className="px-6 py-4">{item.revenueAvg.toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Financial Data Line Chart Section */}
+        <div className="flex-1 bg-white/10 rounded-lg shadow-xl p-6 border-white/20">
+          <h2 className="text-xl font-semibold text-white mb-6 text-center">Revenue Comparisons (Low, High, Avg)</h2>
+          <div style={{ position: 'relative', height: '400px' }}> {/* Set height explicitly */}
+            <Line 
+              data={chartData} 
+              options={{
+                responsive: true, 
+                maintainAspectRatio: false, // Disable aspect ratio to allow manual sizing
+                plugins: {
+                  legend: {
+                    position: 'top',
+                    labels: {
+                      font: {
+                        size: 14,
+                      },
+                    },
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: function (tooltipItem) {
+                        return `$${tooltipItem.raw.toLocaleString()}`;
+                      },
+                    },
+                  },
+                },
+              }} 
+            />
           </div>
         </div>
-      ))}
+
+      </div>
     </div>
   );
 };
