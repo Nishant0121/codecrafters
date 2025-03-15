@@ -187,7 +187,7 @@ const StockPage = () => {
   };
 
   return (
-    <div className="w-screen p-6 bg-gray-900 min-h-screen">
+    <div className="w-screen p-6 bg--ck900 min-h-screen pt-15">
       <h2 className="text-3xl font-bold text-center mb-8 text-white">{stock.name}</h2>
 
       {/* Grid Layout for Charts and Data */}
@@ -195,7 +195,7 @@ const StockPage = () => {
         {/* Left Column: Charts */}
         <div className="space-y-6">
           {/* Stock Price Graph */}
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <div className="bg-black-800 p-6 rounded-lg shadow-lg">
             <h3 className="text-xl font-semibold mb-4 text-white">Price History</h3>
             <div className="h-64"> {/* Fixed height for the chart container */}
               <Line
