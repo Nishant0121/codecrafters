@@ -23,6 +23,8 @@ import StockNewsResults from "./components/StocksNewsResults";
 import { sampleStocks } from "./Data/Stocks";
 import FinancialExpectations from "./components/FinancialExpectations";
 import MutualFundCreator from "./components/MFCreator";
+import InsuranceComponent from "./components/Insurance";
+import BondsAndSecuritiesComponent from "./components/Bonds";
 
 function App() {
   const { loginUser, setloginUser } = useContext(AppContext);
@@ -99,6 +101,8 @@ function App() {
               path="/financial-expectations"
               element={<FinancialExpectations />}
             />
+            <Route path="/insurance" element={<InsuranceComponent />} />
+            <Route path="/bonds" element={<BondsAndSecuritiesComponent />} />
           </Routes>
         </main>
         {!hideNavbarFooter && <Footer />}

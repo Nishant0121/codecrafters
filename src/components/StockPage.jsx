@@ -331,8 +331,9 @@ const StockPage = () => {
           {/* News Section */}
           {renderNews()}
         </div>
-        <FinancialExpectations symbol={symbol} />
+        
       </div>
+      <FinancialExpectations symbol={symbol} />
     </div>
   );
 };
