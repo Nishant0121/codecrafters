@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
@@ -24,7 +24,6 @@ function App() {
   const { data } = useContext(AppContext);
   const location = useLocation();
 
-  // Hide Navbar and Footer on Login and Register pages
   const hideNavbarFooter = location.pathname === "/login" || location.pathname === "/register";
   const { setloginUser } = useContext(AppContext);
 
@@ -33,7 +32,7 @@ function App() {
     if (user) {
       setloginUser(JSON.parse(user));
     }
-  }, [setloginUser]); // Added dependency array
+  }, [setloginUser]); 
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
