@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -21,6 +21,11 @@ import Watchlist from "./components/Watchlist";
 import StockPage from "./components/StockPage";
 
 function App() {
+  const { data } = useContext(AppContext);
+  const location = useLocation();
+
+  const hideNavbarFooter =
+    location.pathname === "/login" || location.pathname === "/register";
   const { setloginUser } = useContext(AppContext);
 
   useEffect(() => {
@@ -28,12 +33,12 @@ function App() {
     if (user) {
       setloginUser(JSON.parse(user));
     }
-  }, [setloginUser]); // Added dependency array
+  }, [setloginUser]);
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
       <div className="relative flex min-h-screen flex-col">
-        <Navbar />
+        {!hideNavbarFooter && <Navbar />}
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -42,7 +47,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/investments" element={<InvestmentsPage />} />
             <Route path="/portfolio" element={<PortfolioPage />} />
-            <Route path="about" element={<LiveObjectDetection />} />
+            <Route path="/about" element={<LiveObjectDetection />} />
             <Route path="*" element={<ErrorPage />} />
             <Route path="/chat" element={<ChatBot />} />
             <Route path="/pay" element={<Pay />} />
@@ -53,7 +58,7 @@ function App() {
             <Route path="/watchlist/:symbol" element={<StockPage />} />
           </Routes>
         </main>
-        <Footer />
+        {!hideNavbarFooter && <Footer />}
       </div>
     </ThemeProvider>
   );

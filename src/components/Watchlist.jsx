@@ -48,7 +48,7 @@ const Watchlist = ({ stocks = [] }) => {
 
               {/* View Details Link */}
               <Link
-                to={`/stocks/${stock.symbol}`}
+                to={`/watchlist/${stock.symbol}`}
                 className="text-blue-400 hover:underline"
               >
                 View Details
