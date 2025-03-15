@@ -118,22 +118,6 @@ export default function DashboardPage() {
                 <Progress value={75} className="mt-3 h-2" />
               </CardContent>
             </Card>
-      {/* Cards Grid */}
-      <div className="mb-8 grid gap-4 md:grid-cols-3">
-        <Card className="dashboard-card">
-          <CardHeader className="flex items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Portfolio Value</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$28,456.72</div>
-            <div className="flex items-center text-xs text-green-500">
-              <ArrowUpRight className="mr-1 h-3 w-3" />
-              +2.5% from last month
-            </div>
-            <Progress value={75} className="mt-3 h-2" />
-          </CardContent>
-        </Card>
 
             <Card className="dashboard-card">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -151,20 +135,6 @@ export default function DashboardPage() {
                 <Progress value={65} className="mt-3 h-2" />
               </CardContent>
             </Card>
-        <Card className="dashboard-card">
-          <CardHeader className="flex items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Monthly Returns</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$1,245.32</div>
-            <div className="flex items-center text-xs text-green-500">
-              <ArrowUpRight className="mr-1 h-3 w-3" />
-              +4.3% from last month
-            </div>
-            <Progress value={65} className="mt-3 h-2" />
-          </CardContent>
-        </Card>
 
             <Card className="dashboard-card">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -191,27 +161,6 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </div>
-        <Card className="dashboard-card">
-          <CardHeader className="flex items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Available Cash</CardTitle>
-            <Wallet className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$4,780.00</div>
-            <div className="mt-1 text-xs text-muted-foreground">Ready to invest</div>
-            <div className="mt-3 flex items-center justify-between">
-              <Button size="sm" variant="outline" className="h-8">
-                <CreditCard className="mr-2 h-3 w-3" />
-                Deposit
-              </Button>
-              <Button size="sm" className="h-8">
-                <LineChart className="mr-2 h-3 w-3" />
-                Invest
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
 
           <Tabs defaultValue="summary" className="space-y-4">
             <TabsList>
@@ -219,13 +168,6 @@ export default function DashboardPage() {
               <TabsTrigger value="investments">Investments</TabsTrigger>
               <TabsTrigger value="activity">Activity</TabsTrigger>
             </TabsList>
-      {/* Tabs Section */}
-      <Tabs defaultValue="summary" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="summary">Summary</TabsTrigger>
-          <TabsTrigger value="investments">Investments</TabsTrigger>
-          <TabsTrigger value="activity">Activity</TabsTrigger>
-        </TabsList>
 
             <TabsContent value="summary" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-7">
@@ -233,7 +175,7 @@ export default function DashboardPage() {
                   <InvestmentSummary data={investmentData} />
                 </div>
                 <div className="dashboard-card col-span-7 md:col-span-3">
-                  <PortfolioAllocation data={investmentData.stocks} />
+                  <StockNews />
                 </div>
               </div>
 
@@ -246,24 +188,6 @@ export default function DashboardPage() {
                 </div>
               </div>
             </TabsContent>
-        <TabsContent value="summary" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-7">
-            <div className="dashboard-card col-span-7 md:col-span-4">
-              <InvestmentSummary />
-            </div>
-            <div className="dashboard-card col-span-7 md:col-span-3 items-center justify-center">   
-              <StockNews />
-            </div>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="dashboard-card">
-              <MarketUpdates />
-            </div>
-            <div className="dashboard-card">
-              <RecentTransactions />
-            </div>
-          </div>
-        </TabsContent>
 
             <TabsContent value="investments" className="space-y-4">
               <Card className="dashboard-card">
@@ -281,44 +205,6 @@ export default function DashboardPage() {
           </Tabs>
         </>
       )}
-        <TabsContent value="investments" className="space-y-4">
-          <Card className="dashboard-card">
-            <CardHeader>
-              <CardTitle>Your Investments</CardTitle>
-              <CardDescription>A detailed view of all your current investments</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <WatchlistStocks />
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" asChild className="w-full">
-                <Link to="/investments">
-                  View All Investments <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="activity" className="space-y-4">
-          <Card className="dashboard-card">
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Your account activity and transaction history</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RecentTransactions detailed />
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" asChild className="w-full">
-                <Link to="/transactions">
-                  View All Transactions <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-      </Tabs>
     </div>
   );
 }
