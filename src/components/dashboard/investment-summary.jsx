@@ -1,6 +1,13 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useState, useContext } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   AreaChart,
   Bar,
@@ -13,45 +20,110 @@ import {
   TooltipContent,
   XAxis,
   YAxis,
-} from "@/components/ui/chart"
-
-const data = [
-  { month: "Jan", value: 21340 },
-  { month: "Feb", value: 22150 },
-  { month: "Mar", value: 21980 },
-  { month: "Apr", value: 22780 },
-  { month: "May", value: 23900 },
-  { month: "Jun", value: 24800 },
-  { month: "Jul", value: 25100 },
-  { month: "Aug", value: 26200 },
-  { month: "Sep", value: 27500 },
-  { month: "Oct", value: 28100 },
-  { month: "Nov", value: 28700 },
-  { month: "Dec", value: 28450 },
-]
+} from "@/components/ui/chart";
+import { AppContext } from "@/context/appContext";
 
 export function InvestmentSummary() {
+  const { loginUser } = useContext(AppContext);
+  const [investmentData, setInvestmentData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!loginUser?.uid) return; // Prevent API call if no user
+
+    const fetchInvestmentData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/stock/getProfile/${loginUser.uid}`
+        );
+        if (!response.ok) throw new Error("Failed to fetch investment data");
+
+        const data = await response.json();
+        console.log("Fetched Investment Data:", data); // Debugging Output
+
+        if (!data.profile.stocks || data.profile.stocks.length === 0) {
+          console.warn("No stocks data available");
+          setInvestmentData([]);
+          setLoading(false);
+          return;
+        }
+
+        // Group stocks by purchase month
+        const groupedData = {};
+        data.profile.stocks.forEach((stock) => {
+          const monthKey = new Date(stock.purchaseDate).toLocaleString(
+            "default",
+            { month: "short", year: "2-digit" }
+          );
+          const stockValue = stock.quantity * stock.buyPrice;
+
+          if (!groupedData[monthKey]) {
+            groupedData[monthKey] = 0;
+          }
+          groupedData[monthKey] += stockValue;
+        });
+
+        // Convert grouped data to an array
+        const formattedData = Object.keys(groupedData).map((month) => ({
+          month,
+          value: groupedData[month],
+        }));
+
+        console.log("Formatted Data for Chart:", formattedData); // Debugging Output
+
+        setInvestmentData(formattedData);
+      } catch (error) {
+        console.error("Error fetching investment data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInvestmentData();
+  }, [loginUser]);
+
+  if (loading)
+    return <p className="text-white text-center">Loading investment data...</p>;
+  if (investmentData.length === 0)
+    return (
+      <p className="text-white text-center">No investment data available.</p>
+    );
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Portfolio Performance</CardTitle>
-        <CardDescription>Your investment growth over the past year</CardDescription>
+        <CardDescription>Your investment growth over time</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px]">
+        <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <ChartContainer data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-              <XAxis axisLine={false}>
-                <TickLabels formatter={(value) => value} />
+            <ChartContainer
+              data={investmentData}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <XAxis dataKey="month" axisLine={false}>
+                <TickLabels />
               </XAxis>
-              <YAxis tickFormatter={(value) => `$${Math.floor(value / 1000)}k`} axisLine={false} />
+              <YAxis
+                tickFormatter={(value) => `$${Math.floor(value / 1000)}k`}
+                axisLine={false}
+              />
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip content={<CustomTooltip />} />
               <AreaChart>
                 <defs>
                   <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.1} />
+                    <stop
+                      offset="5%"
+                      stopColor="hsl(var(--primary))"
+                      stopOpacity={0.3}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="hsl(var(--primary))"
+                      stopOpacity={0.1}
+                    />
                   </linearGradient>
                 </defs>
                 <Line
@@ -61,14 +133,19 @@ export function InvestmentSummary() {
                   strokeWidth={2}
                   activeDot={{ r: 6 }}
                 />
-                <Bar type="monotone" dataKey="value" fill="url(#colorValue)" fillOpacity={1} />
+                <Bar
+                  type="monotone"
+                  dataKey="value"
+                  fill="url(#colorValue)"
+                  fillOpacity={1}
+                />
               </AreaChart>
             </ChartContainer>
           </ResponsiveContainer>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function CustomTooltip({ active, payload, label }) {
@@ -80,8 +157,7 @@ function CustomTooltip({ active, payload, label }) {
           <p className="font-medium">${payload[0].value.toLocaleString()}</p>
         </div>
       </TooltipContent>
-    )
+    );
   }
-  return null
+  return null;
 }
-

@@ -35,6 +35,8 @@ export default function DashboardPage() {
   const [investmentData, setInvestmentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [balance, setBalance] = useState(null);
+  const [transactions, setTransactions] = useState([]);
   const { loginUser } = useContext(AppContext);
 
   useEffect(() => {
@@ -73,6 +75,28 @@ export default function DashboardPage() {
     );
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [loginUser]);
+
+  useEffect(() => {
+    const fetchWalletData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/stock/wallet/balance/${loginUser.uid}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch wallet data");
+        }
+        const data = await response.json();
+        setBalance(data.balance);
+        setTransactions(data.transactions);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWalletData();
+  }, [loginUser.uid]);
 
   return (
     <div className="container mx-auto px-4 pt-20">
@@ -147,19 +171,23 @@ export default function DashboardPage() {
                 <Wallet className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">$4,780.00</div>
+                <div className="text-2xl font-bold">₹{balance?.toFixed(2)}</div>
                 <div className="mt-1 text-xs text-muted-foreground">
                   Ready to invest
                 </div>
                 <div className="mt-3 flex items-center justify-between">
-                  <Button size="sm" variant="outline" className="h-8">
-                    <CreditCard className="mr-2 h-3 w-3" />
-                    Deposit
-                  </Button>
-                  <Button size="sm" className="h-8">
-                    <LineChart className="mr-2 h-3 w-3" />
-                    Invest
-                  </Button>
+                  <Link to="/pay">
+                    <Button size="sm" variant="outline" className="h-8">
+                      <CreditCard className="mr-2 h-3 w-3" />
+                      Deposit
+                    </Button>
+                  </Link>
+                  <Link to="/watchlist">
+                    <Button size="sm" className="h-8">
+                      <LineChart className="mr-2 h-3 w-3" />
+                      Invest
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>

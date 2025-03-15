@@ -11,7 +11,7 @@ const port = 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-const API_KEY = process.env.GOOGLE_API_KEY;
+const API_KEY = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 const model = genAI.getGenerativeModel({
@@ -29,16 +29,22 @@ const generationConfig = {
 
 // Dictionary of common financial terms and their explanations
 const financeTerms = {
-  "stock": "A stock represents ownership in a company and a claim on part of its assets and earnings.",
-  "bond": "A bond is a loan made by an investor to a borrower, typically a corporation or government.",
-  "dividend": "A dividend is a payment made by a corporation to its shareholders from its profits.",
+  stock:
+    "A stock represents ownership in a company and a claim on part of its assets and earnings.",
+  bond: "A bond is a loan made by an investor to a borrower, typically a corporation or government.",
+  dividend:
+    "A dividend is a payment made by a corporation to its shareholders from its profits.",
   "capital gain": "A capital gain is the profit from the sale of an asset.",
-  "liquidity": "Liquidity is the ease of converting an asset to cash.",
-  "mutual fund": "A mutual fund pools money from many investors to invest in stocks, bonds, or other assets.",
-  "ETF": "An ETF (Exchange-Traded Fund) is a fund that trades on stock exchanges, much like a stock.",
-  "interest rate": "An interest rate is the cost of borrowing money, expressed as a percentage of the principal.",
-  "inflation": "Inflation is the rate at which the general level of prices for goods and services rises.",
-  "recession": "A recession is a significant decline in economic activity across the economy lasting for months or years.",
+  liquidity: "Liquidity is the ease of converting an asset to cash.",
+  "mutual fund":
+    "A mutual fund pools money from many investors to invest in stocks, bonds, or other assets.",
+  ETF: "An ETF (Exchange-Traded Fund) is a fund that trades on stock exchanges, much like a stock.",
+  "interest rate":
+    "An interest rate is the cost of borrowing money, expressed as a percentage of the principal.",
+  inflation:
+    "Inflation is the rate at which the general level of prices for goods and services rises.",
+  recession:
+    "A recession is a significant decline in economic activity across the economy lasting for months or years.",
 };
 
 // POST endpoint to handle user input and return appropriate responses
@@ -52,7 +58,9 @@ app.post("/chat", async (req, res) => {
     // Check if the user input matches any predefined financial term
     const term = userInput.toLowerCase().trim();
     if (financeTerms[term]) {
-      return res.json({ message: `${term.toUpperCase()}: ${financeTerms[term]}` });
+      return res.json({
+        message: `${term.toUpperCase()}: ${financeTerms[term]}`,
+      });
     }
 
     // Use Google Generative AI (Gemini) if it's not a predefined term
@@ -71,7 +79,6 @@ app.post("/chat", async (req, res) => {
 
     // Send the generated response back to the client
     res.json({ message: responseMessage });
-    
   } catch (error) {
     console.error("❌ API Error:", error.response?.data || error.message);
     res.status(500).json({ error: "Failed to process the request." });

@@ -20,12 +20,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AppContext } from "@/context/appContext";
+import axios from "axios";
 
 // Hardcoded stock details
 const stockDetails = {
   AAPL: { name: "Apple Inc.", price: 145.0, allocation: 8.45 },
   GOOGL: { name: "Alphabet Inc. (Google)", price: 165.0, allocation: 10.22 },
-  MSFT: { name: "Microsoft Corporation", price: 300.0, allocation: 7.89 },
+  MSFT: { name: "Microsoft Corporation", price: 396.6, allocation: 7.89 },
+  AMZN: { name: "Amazon.com Inc.", price: 196.15, allocation: 9.32 },
+  TSLA: { name: "Tesla, Inc.", price: 251.15, allocation: 9.32 },
+  NVDA: { name: "NVIDIA Corporation", price: 125.0, allocation: 9.32 },
 };
 
 export function InvestmentTable({ type = "all" }) {
@@ -39,9 +43,41 @@ export function InvestmentTable({ type = "all" }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Display 10 items per page
 
+  const updateinvestment = async (stocks) => {
+    if (!loginUser?.uid) return; // Ensure the user is logged in
+
+    // Calculate total portfolio value as the sum of profit/loss
+    const totalPortfolioValue = stocks.reduce(
+      (sum, stock) => sum + stock.profitLoss,
+      0
+    );
+
+    const payload = {
+      uid: loginUser.uid,
+      stocks: stocks.map((stock) => ({
+        symbol: stock.symbol,
+        quantity: stock.quantity,
+        buyPrice: stock.averageCost, // Use the correct field for buy price
+        value: stock.value,
+        profitLoss: stock.profitLoss,
+      })),
+      totalPortfolioValue, // Include in the request
+    };
+
+    try {
+      await axios.post(
+        "http://localhost:3000/api/stock/updateinvestment",
+        payload
+      );
+      console.log("Investment data updated successfully");
+    } catch (error) {
+      console.error("Error updating investment:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchInvestmentData = async () => {
-      console.log(loginUser)
+      console.log(loginUser);
 
       try {
         const response = await fetch(
@@ -58,11 +94,11 @@ export function InvestmentTable({ type = "all" }) {
             symbol: stock.symbol,
             name: hardcoded.name || "Unknown",
             quantity: stock.quantity,
-            price: hardcoded.price || 0, // Use API price if available
+            price: stock.buyPrice || 0, // Use API price if available
             averageCost: stock.buyPrice,
             value: stock.quantity * (hardcoded.price || stock.buyPrice),
             profitLoss:
-              stock.quantity * (hardcoded.price || stock.buyPrice) -
+              stock.quantity * hardcoded.price -
               stock.quantity * stock.buyPrice,
             profitLossPercent:
               ((hardcoded.price - stock.buyPrice) / stock.buyPrice) * 100 || 0,
@@ -71,6 +107,7 @@ export function InvestmentTable({ type = "all" }) {
         });
 
         setInvestmentData(transformedData);
+        await updateinvestment(transformedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

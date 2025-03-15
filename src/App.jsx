@@ -25,6 +25,7 @@ import FinancialExpectations from "./components/FinancialExpectations";
 import MutualFundCreator from "./components/MFCreator";
 import InsuranceComponent from "./components/Insurance";
 import BondsAndSecuritiesComponent from "./components/Bonds";
+import Profile from "./pages/profile";
 
 function App() {
   const { loginUser, setloginUser } = useContext(AppContext);
@@ -73,7 +74,7 @@ function App() {
     <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
       <div className="relative flex min-h-screen flex-col">
         {!hideNavbarFooter && <Navbar />}
-        <ChatBot/>
+        <ChatBot />
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -102,6 +103,7 @@ function App() {
               path="/financial-expectations"
               element={<FinancialExpectations />}
             />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/insurance" element={<InsuranceComponent />} />
             <Route path="/bonds" element={<BondsAndSecuritiesComponent />} />
           </Routes>

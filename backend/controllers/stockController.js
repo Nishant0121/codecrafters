@@ -71,12 +71,11 @@ export const removeStock = async (req, res) => {
     await profile.save();
 
     res.status(200).json({ message: "Stock removed successfully", profile });
-  } catch (error) {   
+  } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", error });
   }
 };
-
 
 export const getProfile = async (req, res) => {
   try {
@@ -94,7 +93,6 @@ export const getProfile = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
-
 
 export const updateWallet = async (req, res) => {
   try {
@@ -172,25 +170,23 @@ export const addInvestment = async (req, res) => {
       return res.status(400).json({ message: "Invalid data format" });
     }
 
-    // Calculate Total Portfolio Value
+    // Calculate Total Portfolio Value as the sum of profitLoss
     const totalPortfolioValue = stocks.reduce(
-      (sum, stock) => sum + stock.value,
+      (sum, stock) => sum + (stock.profitLoss || 0),
       0
     );
 
-    // Check if an investment record already exists for the user
     let investment = await Investment.findOne({ uid });
 
     if (investment) {
-      // Update the existing investment
       investment.stocks = stocks;
       investment.totalPortfolioValue = totalPortfolioValue;
       await investment.save();
-      return res
-        .status(200)
-        .json({ message: "Investment data updated successfully", investment });
+      return res.status(200).json({
+        message: "Investment data updated successfully",
+        investment,
+      });
     } else {
-      // Create a new investment entry
       investment = new Investment({
         uid,
         stocks,
@@ -198,9 +194,10 @@ export const addInvestment = async (req, res) => {
       });
 
       await investment.save();
-      return res
-        .status(201)
-        .json({ message: "Investment data saved successfully", investment });
+      return res.status(201).json({
+        message: "Investment data saved successfully",
+        investment,
+      });
     }
   } catch (error) {
     console.error("Error saving/updating investment:", error);

@@ -1,29 +1,116 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ArrowDown, ArrowUp, Clock, DollarSign, Wallet } from "lucide-react"
+import { useState, useContext, useEffect } from "react";
+import axios from "axios";
+import { ArrowDown, ArrowUp, Clock, DollarSign, Wallet } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "react-hot-toast";
+import { AppContext } from "@/context/appContext";
+import { sampleStocks } from "@/Data/Stocks"; // Import stock data
 
 export function OrderPanel({ className = "" }) {
-  const [orderType, setOrderType] = useState("market")
-  const [action, setAction] = useState("buy")
-  const [shares, setShares] = useState("10")
-  const [stockPrice, setStockPrice] = useState(178.35)
-  const [totalCost, setTotalCost] = useState(1783.5)
+  const { loginUser } = useContext(AppContext);
+  const [orderType, setOrderType] = useState("market");
+  const [action, setAction] = useState("buy");
+  const [shares, setShares] = useState("10");
+  const [stockPrice, setStockPrice] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
+  const [selectedStock, setSelectedStock] = useState("AMZN");
+  const [loading, setLoading] = useState(false);
+
+  // **Set initial stock price based on default selected stock**
+  useEffect(() => {
+    const defaultStock = sampleStocks.find(
+      (stock) => stock.symbol === selectedStock
+    );
+    if (defaultStock) {
+      setStockPrice(parseFloat(defaultStock.close));
+      setTotalCost(parseFloat(defaultStock.close) * parseInt(shares));
+    }
+  }, [selectedStock, shares]); // Runs when stock or shares change
 
   const handleSharesChange = (e) => {
-    const value = e.target.value
-    setShares(value)
-    setTotalCost(Number.parseFloat(value || 0) * stockPrice)
-  }
+    const value = e.target.value;
+    setShares(value);
+    setTotalCost(Number.parseFloat(value || 0) * stockPrice);
+  };
+
+  const handleStockChange = (symbol) => {
+    setSelectedStock(symbol);
+    const stock = sampleStocks.find((s) => s.symbol === symbol);
+    if (stock) {
+      setStockPrice(parseFloat(stock.close));
+      setTotalCost(parseFloat(stock.close) * parseInt(shares));
+    }
+  };
+
+  const handleOrderSubmit = async () => {
+    if (!loginUser?.uid) {
+      toast.error("User not logged in");
+      return;
+    }
+
+    const stockData = {
+      uid: loginUser.uid,
+      quantity: Number(shares),
+      symbol: selectedStock,
+      buyPrice: stockPrice.toFixed(2),
+      purchaseDate: new Date().toISOString(),
+    };
+
+    const walletUpdateData = {
+      uid: loginUser.uid,
+      amount: Number(totalCost.toFixed(2)),
+      type: "debit",
+    };
+
+    try {
+      setLoading(true);
+
+      // Buy the Stock
+      const stockResponse = await axios.post(
+        "http://localhost:3000/api/stock/addStock",
+        stockData
+      );
+      console.log("Stock Purchase Response:", stockResponse.data);
+
+      // Update wallet
+      const walletResponse = await axios.post(
+        "http://localhost:3000/api/stock/updateWallet",
+        walletUpdateData
+      );
+      console.log("Wallet Update Response:", walletResponse.data);
+
+      toast.success(
+        `Bought ${shares} shares of ${selectedStock} & updated wallet!`
+      );
+    } catch (error) {
+      console.error("Error in transaction:", error);
+      toast.error("Transaction failed! Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card className={className}>
@@ -41,16 +128,16 @@ export function OrderPanel({ className = "" }) {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="symbol">Symbol</Label>
-              <Select defaultValue="AMZN">
+              <Select value={selectedStock} onValueChange={handleStockChange}>
                 <SelectTrigger id="symbol">
                   <SelectValue placeholder="Select stock" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="AAPL">AAPL - Apple Inc.</SelectItem>
-                  <SelectItem value="MSFT">MSFT - Microsoft</SelectItem>
-                  <SelectItem value="AMZN">AMZN - Amazon.com Inc.</SelectItem>
-                  <SelectItem value="GOOGL">GOOGL - Alphabet Inc.</SelectItem>
-                  <SelectItem value="TSLA">TSLA - Tesla Inc.</SelectItem>
+                  {sampleStocks.map((stock) => (
+                    <SelectItem key={stock.id} value={stock.symbol}>
+                      {stock.symbol} - {stock.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 
@@ -61,34 +148,6 @@ export function OrderPanel({ className = "" }) {
             </div>
 
             <Separator />
-
-            <div className="space-y-2">
-              <Label htmlFor="order-type">Order Type</Label>
-              <RadioGroup defaultValue="market" id="order-type" className="flex" onValueChange={setOrderType}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="market" id="market" />
-                  <Label htmlFor="market" className="font-normal">
-                    Market
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="limit" id="limit" />
-                  <Label htmlFor="limit" className="font-normal">
-                    Limit
-                  </Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            {orderType === "limit" && (
-              <div className="space-y-2">
-                <Label htmlFor="limit-price">Limit Price</Label>
-                <div className="relative">
-                  <DollarSign className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input id="limit-price" placeholder="0.00" className="pl-8" defaultValue={stockPrice.toFixed(2)} />
-                </div>
-              </div>
-            )}
 
             <div className="space-y-2">
               <Label htmlFor="shares">Shares</Label>
@@ -122,9 +181,13 @@ export function OrderPanel({ className = "" }) {
         </Tabs>
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
-        <Button className="w-full" size="lg">
-          {action === "buy" ? <ArrowDown className="mr-2 h-4 w-4" /> : <ArrowUp className="mr-2 h-4 w-4" />}
-          {action === "buy" ? "Buy" : "Sell"} Shares
+        <Button
+          className="w-full"
+          size="lg"
+          onClick={handleOrderSubmit}
+          disabled={loading}
+        >
+          {loading ? "Processing..." : action === "buy" ? "Buy" : "Sell"} Shares
         </Button>
 
         <div className="text-center text-xs text-muted-foreground">
@@ -139,5 +202,5 @@ export function OrderPanel({ className = "" }) {
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
