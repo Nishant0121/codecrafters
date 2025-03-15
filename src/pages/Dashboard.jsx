@@ -44,6 +44,8 @@ export default function DashboardPage() {
         ease: "power1.out",
       }
     );
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   return (

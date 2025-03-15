@@ -25,7 +25,7 @@ export function Navbar() {
     { name: "Dashboard", href: "/dashboard" },
     { name: "Investments", href: "/investments" },
     { name: "Portfolio", href: "/portfolio" },
-    { name: "Market", href: "/market" },
+    { name: "Watchlist", href: "/watchlist" },
   ];
 
   return (
