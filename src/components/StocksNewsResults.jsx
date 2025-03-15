@@ -36,7 +36,8 @@ const StockNewsResults = () => {
   const [error, setError] = useState(null);
 
   const apiKey = '60cbf3de60f84d66a80660989436a280'; // NewsAPI key
-  const newsApiUrl = `https://newsapi.org/v2/everything?q=${symbol}+stock&sortBy=publishedAt&pageSize=5&apiKey=${apiKey}`;
+  const newsApiUrl=""
+  // const newsApiUrl = `https://newsapi.org/v2/everything?q=${symbol}+stock&sortBy=publishedAt&pageSize=5&apiKey=${apiKey}`;
 
   useEffect(() => {
     if (symbol) {
