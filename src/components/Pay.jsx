@@ -1,8 +1,17 @@
 import { AppContext } from "@/context/appContext";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import { ethers } from "ethers";
+import Web3 from "web3";
+import React, { useContext, useEffect, useState } from "react";
+import PortfolioABI from "./abi.json";
+
+const CONTRACT_ADDRESS = "0xd596CC60Ee34b6a8448f668d9B8c36e0f49e842f";
 
 function Pay() {
+  const [account, setAccount] = useState(null);
+  const [contract, setContract] = useState(null);
+  const [balance, setBalance] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("INR");
   const [receiptId, setReceiptId] = useState("order_receipt_123");
@@ -17,8 +26,108 @@ function Pay() {
   // Common payment amounts
   const quickAmounts = [100, 500, 1000, 5000];
 
+  async function connectWallet() {
+    if (!window.ethereum) {
+      alert("MetaMask not detected! Please install MetaMask.");
+      return;
+    }
+
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      setAccount(accounts[0]);
+
+      const portfolioContract = new ethers.Contract(
+        CONTRACT_ADDRESS,
+        PortfolioABI,
+        signer
+      );
+      setContract(portfolioContract);
+
+      await loadBalance(portfolioContract, accounts[0]);
+    } catch (err) {
+      console.error("Wallet connection failed:", err);
+    }
+  }
+
+  const loadBalance = async (contract, userAddress) => {
+    if (!contract || !userAddress) return;
+    try {
+      const balance = await contract.getInvestment(userAddress);
+      setBalance(ethers.formatEther(balance));
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+    }
+  };
+
+   const invest = async (amount) => {
+          if (!contract || !account) {
+              console.error("Contract or account not available");
+              return;
+          }
+  
+          setLoading(true);
+          try {
+              const tx = await contract.invest(ethers.parseEther(amount));
+              await tx.wait();
+  
+              console.log("Investment successful:", tx);
+              await loadBalance(contract, account);
+          } catch (error) {
+              console.error("Investment failed:", error);
+          }
+          setLoading(false);
+      };
+  
+      const withdraw = async (amount) => {
+          if (!contract || !account) {
+              console.error("Contract or account not available");
+              return;
+          }
+  
+          setLoading(true);
+          try {
+              const tx = await contract.withdraw(ethers.parseEther(amount));
+              await tx.wait();
+  
+              console.log("Withdrawal successful:", tx);
+              await loadBalance(contract, account);
+          } catch (error) {
+              console.error("Withdrawal failed:", error);
+          }
+          setLoading(false);
+      };
+
+       useEffect(() => {
+              const checkWallet = async () => {
+                  if (window.ethereum) {
+                      const provider = new ethers.BrowserProvider(window.ethereum);
+                      const accounts = await window.ethereum.request({ method: "eth_accounts" });
+      
+                      if (accounts.length > 0) {
+                          setAccount(accounts[0]);
+      
+                          const signer = await provider.getSigner();
+                          const portfolioContract = new ethers.Contract(CONTRACT_ADDRESS, PortfolioABI, signer);
+      
+                          setContract(portfolioContract);
+                          await loadBalance(portfolioContract, accounts[0]); 
+                      }
+                  }
+              };
+      
+              checkWallet();
+              connectWallet()
+          }, []);
+
   const handlePayment = async (e) => {
     e.preventDefault();
+
+
 
     if (!amount || isNaN(amount) || amount <= 0) {
       toast("Please enter a valid amount");
@@ -26,6 +135,7 @@ function Pay() {
     }
 
     setIsLoading(true);
+    invest(amount);
 
     try {
       // Step 1: Create order on your server
@@ -54,13 +164,16 @@ function Pay() {
         order_id: order.id,
         handler: async function (response) {
           try {
-            const validateRes = await fetch("http://localhost:5001/order/validate", {
-              method: "POST",
-              body: JSON.stringify(response),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
+            const validateRes = await fetch(
+              "http://localhost:5001/order/validate",
+              {
+                method: "POST",
+                body: JSON.stringify(response),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
             const validate = await validateRes.json();
 
             if (validate.msg === "Payment Successful") {
@@ -123,7 +236,7 @@ function Pay() {
     } shadow-lg z-50 animate-fade-in-up`;
     toastElem.textContent = message;
     document.body.appendChild(toastElem);
-    
+
     setTimeout(() => {
       toastElem.classList.add("animate-fade-out");
       setTimeout(() => document.body.removeChild(toastElem), 500);
@@ -136,12 +249,25 @@ function Pay() {
         <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-white/20">
           <div className="flex flex-col items-center mb-8">
             <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <h2 className="text-3xl font-bold text-white mb-1">Add Funds</h2>
-            <p className="text-gray-300 text-center">Secure payment powered by Razorpay</p>
+            <p className="text-gray-300 text-center">
+              Secure payment powered by Razorpay
+            </p>
           </div>
 
           <div className="mb-6">
@@ -190,9 +316,25 @@ function Pay() {
           >
             {isLoading ? (
               <div className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Processing...
               </div>
@@ -200,10 +342,21 @@ function Pay() {
               <>Pay ₹{amount || "0"}</>
             )}
           </button>
-          
+
           <div className="mt-6 flex items-center justify-center text-sm text-gray-300">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
             </svg>
             Secured by 256-bit encryption
           </div>
