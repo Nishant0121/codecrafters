@@ -1,14 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Slider,
-  TextField,
-  Typography,
-} from "@mui/material";
 
 // Dummy stock data
 const stocks = [
@@ -40,7 +31,7 @@ const MutualFundCreator = () => {
 
   // Handle allocation change
   const handleAllocationChange = (id, value) => {
-    setAllocations((prev) => ({ ...prev, [id]: value }));
+    setAllocations((prev) => ({ ...prev, [id]: Number(value) }));
   };
 
   // Calculate total allocation
@@ -77,76 +68,77 @@ const MutualFundCreator = () => {
   };
 
   return (
-    <Box
-      sx={{
-        maxWidth: 500,
-        mx: "auto",
-        mt: 4,
-        p: 3,
-        border: "1px solid #ddd",
-        borderRadius: 2,
-      }}
-    >
-      <Typography variant="h5">Mutual Fund Creator</Typography>
+    <div className="max-w-lg mx-auto mt-10 p-6 border border-gray-300 rounded-lg shadow-lg bg-white">
+      <h2 className="text-2xl font-bold mb-4">Mutual Fund Creator</h2>
 
-      <TextField
-        fullWidth
-        label="Fund Name"
-        variant="outlined"
-        margin="normal"
+      <input
+        type="text"
+        placeholder="Fund Name"
         value={fundName}
         onChange={(e) => setFundName(e.target.value)}
+        className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
       />
 
-      {stocks.map((stock) => (
-        <Box key={stock.id} display="flex" alignItems="center">
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={!!selectedStocks[stock.id]}
-                onChange={() => handleStockSelect(stock)}
-              />
-            }
-            label={`${stock.symbol} - ${stock.name} ($${stock.price})`}
-          />
-        </Box>
-      ))}
+      {/* Stock Selection */}
+      <div className="mb-4">
+        {stocks.map((stock) => (
+          <div key={stock.id} className="flex items-center space-x-2 mb-2">
+            <input
+              type="checkbox"
+              checked={!!selectedStocks[stock.id]}
+              onChange={() => handleStockSelect(stock)}
+              className="w-4 h-4"
+            />
+            <label className="text-gray-700">
+              {stock.symbol} - {stock.name} (${stock.price})
+            </label>
+          </div>
+        ))}
+      </div>
 
+      {/* Stock Allocations */}
       {Object.keys(selectedStocks).map((id) => (
-        <Box key={id} mt={2}>
-          <Typography>
+        <div key={id} className="mb-4">
+          <label className="block font-semibold text-gray-700">
             {selectedStocks[id].symbol} Allocation: {allocations[id] || 0}%
-          </Typography>
-          <Slider
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            step="5"
             value={allocations[id] || 0}
-            onChange={(_, value) => handleAllocationChange(id, value)}
-            min={0}
-            max={100}
-            step={5}
+            onChange={(e) => handleAllocationChange(id, e.target.value)}
+            className="w-full"
           />
-        </Box>
+        </div>
       ))}
 
-      <Typography mt={2} color={isAllocationValid ? "green" : "red"}>
+      {/* Total Allocation */}
+      <p
+        className={`mt-2 font-semibold ${
+          isAllocationValid ? "text-green-600" : "text-red-600"
+        }`}
+      >
         Total Allocation: {totalAllocation}%
-      </Typography>
+      </p>
 
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ mt: 2 }}
+      {/* Submit Button */}
+      <button
         onClick={handleSubmit}
+        className={`w-full mt-4 px-4 py-2 text-white font-semibold rounded-md ${
+          isAllocationValid
+            ? "bg-blue-600 hover:bg-blue-700"
+            : "bg-gray-400 cursor-not-allowed"
+        }`}
         disabled={!isAllocationValid}
       >
         Create Mutual Fund
-      </Button>
+      </button>
 
-      {message && (
-        <Typography mt={2} color="blue">
-          {message}
-        </Typography>
-      )}
-    </Box>
+      {/* Message */}
+      {message && <p className="mt-4 text-blue-600">{message}</p>}
+    </div>
   );
 };
 

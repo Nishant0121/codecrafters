@@ -36,6 +36,17 @@ mongoose
 
 app.use(express.json());
 
+const generateToken = (payload, expiresIn = "1h") => {
+  try {
+    return jwt.sign(payload, SECRET_KEY, { expiresIn });
+  } catch (error) {
+    console.error("Error generating token:", error);
+    return null;
+  }
+};
+const user = { id: "12345", email: "user@example.com", role: "admin" };
+app.get("/jwt", generateToken(user));
+
 app.use("/api", apiRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/stock", stockRoutes);
