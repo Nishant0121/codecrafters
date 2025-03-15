@@ -18,28 +18,40 @@ import Watchlist from "./components/Watchlist";
 import StockPage from "./components/StockPage";
 import SIPCalculator from "./components/SIPCalculator";
 import CurrencyConverter from "./components/CurrencyConverter";
-import StockNews from "./components/StockNews"; // Import StockNews component
-import StockNewsResults from "./components/StocksNewsResults"; // Import StockNewsResults component
+import StockNews from "./components/StockNews";
+import StockNewsResults from "./components/StocksNewsResults";
 import { sampleStocks } from "./Data/Stocks";
 import FinancialExpectations from "./components/FinancialExpectations";
-import StocksPrice from "./components/StockGraph";
-import { getUserFromFirestore } from "./firebase/functions";
 
 function App() {
-  const { data } = useContext(AppContext);
+  const { loginUser, setloginUser } = useContext(AppContext);
   const location = useLocation();
 
   const hideNavbarFooter =
     location.pathname === "/login" || location.pathname === "/register";
 
-  const { setloginUser } = useContext(AppContext);
-
   useEffect(() => {
-    const user = localStorage.getItem("ADuser");
-    if (user) {
-      setloginUser(JSON.parse(user));
-    }
+    const fetchUser = () => {
+      try {
+        const storedUser = localStorage.getItem("ADuser");
+        if (!storedUser) return; // Ensure there is a stored user
+
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser && parsedUser.uid) {
+          setloginUser(parsedUser);
+        }
+      } catch (error) {
+        console.error("Error retrieving user:", error);
+      }
+    };
+
+    fetchUser();
   }, [setloginUser]);
+
+  // If loginUser is null, prevent accessing properties like loginUser.uid
+  if (!loginUser) {
+    return <div className="text-center p-10">Loading...</div>;
+  }
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
@@ -64,20 +76,11 @@ function App() {
             <Route path="/watchlist/:symbol" element={<StockPage />} />
             <Route path="/sip" element={<SIPCalculator />} />
             <Route path="/currency" element={<CurrencyConverter />} />
-            <Route path="/news" element={<StockNews />} />{" "}
-            {/* Search Bar Route */}
+            <Route path="/news" element={<StockNews />} />
             <Route
               path="/news-results/:symbol"
               element={<StockNewsResults />}
-            />{" "}
-            {/* News Results Route */}
-            <Route path="/news" element={<StockNews />} />{" "}
-            {/* Search Bar Route */}
-            <Route
-              path="/news-results/:symbol"
-              element={<StockNewsResults />}
-            />{" "}
-            {/* News Results Route */}
+            />
             <Route
               path="/financial-expectations"
               element={<FinancialExpectations />}
