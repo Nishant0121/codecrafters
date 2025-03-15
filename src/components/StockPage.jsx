@@ -15,26 +15,33 @@ const StockPage = () => {
   const [volumeData, setVolumeData] = useState([]);
   const [rsiData, setRsiData] = useState([]);
 
-  // Simulate fetching data for the specific stock
+  // Fetch data for the specific stock
   useEffect(() => {
-    // You can replace this with an API call
-    const stockData = sampleStocks.find((s) => s.symbol === symbol);
-    if (stockData) {
-      setStock(stockData);
+    const fetchData = async () => {
+      try {
+        const stockData = sampleStocks.find((s) => s.symbol === symbol);
+        if (stockData) {
+          setStock(stockData);
 
-      // Simulate historical price data for the graph (example data)
-      const historicalPrices = [145, 150, 148, 152, 160, 170, 175, 180, 185, 190];
-      setGraphData(historicalPrices);
+          // Simulate historical price data for the graph (example data)
+          const historicalPrices = [145, 150, 148, 152, 160, 170, 175, 180, 185, 190];
+          setGraphData(historicalPrices);
 
-      // Simulate volume data
-      const volumePrices = [70, 75, 80, 85, 90, 95, 100, 105, 110, 115];
-      setVolumeData(volumePrices);
+          // Simulate volume data
+          const volumePrices = [70, 75, 80, 85, 90, 95, 100, 105, 110, 115];
+          setVolumeData(volumePrices);
 
-      // Simulate RSI data
-      const rsiValues = [45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
-      setRsiData(rsiValues);
-    }
-  }, [symbol]);
+          // Simulate RSI data
+          const rsiValues = [45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
+          setRsiData(rsiValues);
+        }
+      } catch (error) {
+        console.error('Error fetching stock data:', error);
+      }
+    };
+
+    fetchData(); // Call the fetchData function
+  }, [symbol]); // Dependency array for useEffect
 
   if (!stock) {
     return <div className="text-white">Loading...</div>;

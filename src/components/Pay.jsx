@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 function Pay() {
   const [amount, setAmount] = useState(500); // Example amount (in INR paisa, so 500 = 5 INR)
@@ -15,7 +15,7 @@ function Pay() {
 
     try {
       // Step 1: Create order on your server
-      const response = await fetch("http://localhost:5001/order", {
+      const response = await fetch("http://localhost:3000/order", {
         method: "POST",
         body: JSON.stringify({
           amount: amount * 100, // Convert amount to paisa
@@ -42,13 +42,16 @@ function Pay() {
             const body = { ...response };
 
             // Step 3: Validate payment on your server
-            const validateRes = await fetch("http://localhost:5000/order/validate", {
-              method: "POST",
-              body: JSON.stringify(body),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
+            const validateRes = await fetch(
+              "http://localhost:3000/order/validate",
+              {
+                method: "POST",
+                body: JSON.stringify(body),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
             const validate = await validateRes.json();
 
             if (validate.msg === "Payment Successful") {
@@ -83,15 +86,16 @@ function Pay() {
       console.error("Error initiating payment: ", error);
       alert("An error occurred while processing the payment.");
     }
-  
-
   };
 
   return (
     <div className="container mt-20">
-      <button className="bg-blue-500 text-white p-4 rounded-xl mt-4 hover:bg-blue-700" onClick={handlePayment}>
+      <button
+        className="bg-blue-500 text-white p-4 rounded-xl mt-4 hover:bg-blue-700"
+        onClick={handlePayment}
+      >
         Pay
-          </button>
+      </button>
     </div>
   );
 }

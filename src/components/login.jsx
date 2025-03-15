@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useContext, useState } from "react"
+import { useContext, useState } from "react";
 import {
   auth,
   provider,
@@ -8,77 +8,87 @@ import {
   signOut,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-} from "../firebase"
-import { AppContext } from "../context/appContext"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { LockIcon, MailIcon, LogOutIcon } from "lucide-react"
+} from "../firebase";
+import { AppContext } from "../context/appContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { LockIcon, MailIcon, LogOutIcon } from "lucide-react";
 
 export default function Login() {
-  const [user, setUser] = useState(null)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [user, setUser] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const { loginUser, setloginUser } = useContext(AppContext)
+  const { loginUser, setloginUser } = useContext(AppContext);
 
   // Google Sign-In
   const handleGoogleLogin = async () => {
-    setLoading(true)
-    setError("")
+    setLoading(true);
+    setError("");
     try {
-      const result = await signInWithPopup(auth, provider)
-      setUser(result.user)
-      setloginUser(result.user)
+      const result = await signInWithPopup(auth, provider);
+      setUser(result.user);
+      setloginUser(result.user);
+      localStorage.setItem("ADuser", JSON.stringify(result.user));
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   // Email & Password Login
   const handleEmailLogin = async () => {
-    setLoading(true)
-    setError("")
+    setLoading(true);
+    setError("");
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
-      setUser(userCredential.user)
-      setloginUser(userCredential.user)
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setUser(userCredential.user);
+      setloginUser(userCredential.user);
+      localStorage.setItem("ADuser", JSON.stringify(userCredential.user));
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   // Sign Up
   const handleSignup = async () => {
-    setLoading(true)
-    setError("")
+    setLoading(true);
+    setError("");
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      setUser(userCredential.user)
-      setloginUser(userCredential.user)
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setUser(userCredential.user);
+      setloginUser(userCredential.user);
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   // Logout
   const handleLogout = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      await signOut(auth)
-      setUser(null)
-      setloginUser(null)
+      await signOut(auth);
+      setUser(null);
+      setloginUser(null);
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
-  console.log(loginUser)
+  console.log(loginUser);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-slate-900">
@@ -89,7 +99,9 @@ export default function Login() {
 
         {user ? (
           <div className="text-center relative z-10">
-            <h2 className="text-2xl font-bold mb-6 text-white">Welcome, {loginUser?.displayName || "User"}!</h2>
+            <h2 className="text-2xl font-bold mb-6 text-white">
+              Welcome, {loginUser?.displayName || "User"}!
+            </h2>
             {user.photoURL && (
               <div className="relative mx-auto w-28 h-28 mb-6 group">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 animate-pulse blur-md opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -121,7 +133,9 @@ export default function Login() {
         ) : (
           <div className="relative z-10">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
+              <h2 className="text-3xl font-bold text-white mb-2">
+                Welcome Back
+              </h2>
               <p className="text-gray-400">Sign in to continue</p>
             </div>
 
@@ -182,7 +196,9 @@ export default function Login() {
 
             <div className="flex items-center my-6">
               <div className="flex-grow h-px bg-gradient-to-r from-transparent via-gray-500/30 to-transparent"></div>
-              <span className="mx-4 text-gray-400 text-sm font-medium">or continue with</span>
+              <span className="mx-4 text-gray-400 text-sm font-medium">
+                or continue with
+              </span>
               <div className="flex-grow h-px bg-gradient-to-r from-transparent via-gray-500/30 to-transparent"></div>
             </div>
 
@@ -225,6 +241,5 @@ export default function Login() {
         )}
       </div>
     </div>
-  )
+  );
 }
-

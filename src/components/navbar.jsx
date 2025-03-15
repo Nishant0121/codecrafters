@@ -1,74 +1,94 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+// "use client"  // Removed since it's not needed in plain React
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom"; // Alternative for Next.js Link in React
+import { Menu } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
+
+export function Navbar() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navItems = [
+    { name: "Home", href: "/" },
+    { name: "Dashboard", href: "/dashboard" },
+    { name: "Investments", href: "/investments" },
+    { name: "Portfolio", href: "/portfolio" },
+    { name: "Market", href: "/market" },
+  ];
 
   return (
-    <nav className="bg-blue-600 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          {/* Logo */}
-          <div className="text-white text-2xl font-bold">
-            <Link to="/">MyBrand</Link>
-          </div>
+    <header
+      className={cn(
+        "fixed top-0 z-50 w-full transition-all duration-300",
+        isScrolled ? "bg-background/80 backdrop-blur-md shadow-sm" : "bg-transparent"
+      )}
+    >
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-6">
+          <Link to="/" className="flex items-center gap-2">
+            <span className="hidden bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-xl font-bold text-transparent sm:inline-block">
+              Investify
+            </span>
+          </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-6">
-            <Link to="/" className="text-white hover:text-gray-200">
-              Home
-            </Link>
-            <Link to="/about" className="text-white hover:text-gray-200">
-              About
-            </Link>
-            <Link to="/services" className="text-white hover:text-gray-200">
-              Services
-            </Link>
-            <Link to="/contact" className="text-white hover:text-gray-200">
-              Contact
-            </Link>
-          </div>
+          <nav className="hidden md:flex md:gap-6">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+        </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-white focus:outline-none"
-            >
-              {isOpen ? "✖" : "☰"}
-            </button>
-          </div>
+        <div className="flex items-center gap-4">
+          <Button variant="outline" size="sm" className="hidden md:flex">
+            Sign In
+          </Button>
+          <Button size="sm" className="hidden md:flex">
+            Get Started
+          </Button>
+
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle Menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <nav className="grid gap-6 text-lg font-medium">
+                {navItems.map((item) => (
+                  <Link key={item.name} to={item.href} className="hover:text-primary">
+                    {item.name}
+                  </Link>
+                ))}
+                <Button size="sm" className="mt-4">
+                  Sign In
+                </Button>
+                <Button size="sm" variant="outline">
+                  Get Started
+                </Button>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-blue-700">
-          <Link to="/" className="block px-4 py-2 text-white hover:bg-blue-500">
-            Home
-          </Link>
-          <Link
-            to="/about"
-            className="block px-4 py-2 text-white hover:bg-blue-500"
-          >
-            About
-          </Link>
-          <Link
-            to="/services"
-            className="block px-4 py-2 text-white hover:bg-blue-500"
-          >
-            Services
-          </Link>
-          <Link
-            to="/contact"
-            className="block px-4 py-2 text-white hover:bg-blue-500"
-          >
-            Contact
-          </Link>
-        </div>
-      )}
-    </nav>
+    </header>
   );
-};
-
-export default Navbar;
+}
