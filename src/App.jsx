@@ -10,18 +10,18 @@ import LandingPage from "./pages/LandingPage";
 import DashboardPage from "./pages/Dashboard";
 import InvestmentsPage from "./pages/Investments";
 import PortfolioPage from "./pages/Portfolio";
-import "./App.css";
-import "./index.css";
 import ErrorPage from "./components/errorpage";
 import ChatBot from "./components/Chatbot";
 import Pay from "./components/Pay";
 import LiveObjectDetection from "./components/imageClass";
-import { sampleStocks } from "./Data/Stocks";
 import Watchlist from "./components/Watchlist";
 import StockPage from "./components/StockPage";
-import MyInvestment from "./Tanishk/MyInvestment";
 import SIPCalculator from "./components/SIPCalculator";
 import CurrencyConverter from "./components/CurrencyConverter";
+import StockNews from "./components/StockNews"; // Import StockNews component
+import StockNewsResults from "./components/StocksNewsResults"; // Import StockNewsResults component
+import { sampleStocks } from "./Data/Stocks";
+import ConnectWallet from "./pages/ConnectWallet";
 
 function App() {
   const { data } = useContext(AppContext);
@@ -29,6 +29,7 @@ function App() {
 
   const hideNavbarFooter =
     location.pathname === "/login" || location.pathname === "/register";
+
   const { setloginUser } = useContext(AppContext);
 
   useEffect(() => {
@@ -54,14 +55,13 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
             <Route path="/chat" element={<ChatBot />} />
             <Route path="/pay" element={<Pay />} />
-            <Route
-              path="/watchlist"
-              element={<Watchlist stocks={sampleStocks} />}
-            />
+            <Route path="/watchlist" element={<Watchlist stocks={sampleStocks} />} />
             <Route path="/watchlist/:symbol" element={<StockPage />} />
-            <Route path="/myinvestment" element={<MyInvestment />} />
             <Route path="/sip" element={<SIPCalculator />} />
             <Route path="/currency" element={<CurrencyConverter />} />
+            <Route path="/news" element={<StockNews />} /> {/* Search Bar Route */}
+            <Route path="/news-results/:symbol" element={<StockNewsResults />} /> {/* News Results Route */}
+            <Route path="/connect" element={<ConnectWallet />} />
           </Routes>
         </main>
         {!hideNavbarFooter && <Footer />}

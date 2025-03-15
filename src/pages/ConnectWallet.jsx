@@ -102,7 +102,7 @@ function ConnectWallet() {
     }, []);
 
     return (
-        <div>
+        <div className="mt-30">
             <h1>Investment Portfolio</h1>
             {!account ? (
                 <button onClick={connectWallet}>Connect Wallet</button>
@@ -111,10 +111,10 @@ function ConnectWallet() {
                     <p>Connected Account: {account}</p>
                     <p>Your Investment Balance: {balance} ETH</p>
 
-                    <button onClick={() => invest("0.1")} disabled={loading}>
+                    <button className="mt-10 mr-3 border-white border-2 rounded-md px-4 py-2 bg-black text-white hover:bg-white hover:text-black" onClick={() => invest("0.1")} disabled={loading}>
                         {loading ? "Processing..." : "Invest 0.1 ETH"}
                     </button>
-                    <button onClick={() => withdraw("0.1")} disabled={loading}>
+                    <button className="border-white border-2 rounded-md px-4 py-2 bg-black text-white hover:bg-white hover:text-black"  onClick={() => withdraw("0.1")} disabled={loading}>
                         {loading ? "Processing..." : "Withdraw 0.1 ETH"}
                     </button>
                 </>
