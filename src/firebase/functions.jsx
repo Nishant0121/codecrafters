@@ -1,14 +1,21 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
-export const saveUserToFirestore = async (user) => {
+export const saveUserToFirestore = async (
+  uid,
+  name,
+  email,
+  mobile,
+  panNumber
+) => {
   try {
-    await setDoc(doc(db, "users", user.uid), {
-      uid: user.uid,
-      name: user.displayName || name,
-      email: user.email,
+    await setDoc(doc(db, "users", uid), {
+      uid: uid,
+      name: name,
+      email: email,
       role: "investor",
-      mobile: user.phoneNumber || mobile,
+      auth: panNumber,
+      mobile: mobile,
     });
   } catch (err) {
     console.error("Error saving user to Firestore:", err);

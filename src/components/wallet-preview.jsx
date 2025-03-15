@@ -1,25 +1,21 @@
 import { useContext, useEffect, useState } from "react";
-import {
-  ArrowRight,
-  Copy,
-  ExternalLink,
-  Eye,
-  PlusCircle,
-  RefreshCcw,
-  Send,
-} from "lucide-react";
+import { ArrowRight, Copy, ExternalLink, Eye, PlusCircle, RefreshCcw, Send, Wallet, ChevronUp, ChevronDown, Clock, CheckCircle2, XCircle } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { AppContext } from "@/context/appContext";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function WalletPreview() {
   const [balance, setBalance] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const { loginUser } = useContext(AppContext);
 
   useEffect(() => {
@@ -42,7 +38,31 @@ export function WalletPreview() {
     };
 
     fetchWalletData();
-  }, []);
+  }, [loginUser.uid]);
+
+  const toggleBalanceVisibility = () => {
+    setIsBalanceVisible(!isBalanceVisible);
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    // You could add a toast notification here
+  };
+
+  const formatAddress = (address) => {
+    return `${address.substring(0, 6)}...${address.substring(address.length - 6)}`;
+  };
+
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    }).format(date);
+  };
 
   return (
     <Card className="overflow-hidden border-0 bg-white/10 backdrop-blur-md text-white">
