@@ -26,7 +26,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InvestmentSummary } from "@/components/dashboard/investment-summary";
 import { MarketUpdates } from "@/components/dashboard/market-updates";
-import { PortfolioAllocation } from "@/components/dashboard/portfolio-allocation";
+import StockNews from "@/components/dashboard/portfolio-allocation";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { WatchlistStocks } from "@/components/dashboard/watchlist-stocks";
 
@@ -68,13 +68,13 @@ export default function DashboardPage() {
         ease: "power1.out",
       }
     );
-
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   return (
     <div className="container mx-auto px-4 pt-20">
-      <div className="mb-8 flex flex-col gap-4 pt-8 md:flex-row md:items-center md:justify-between">
+      {/* Header */}
+      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground">
@@ -175,7 +175,7 @@ export default function DashboardPage() {
                   <InvestmentSummary data={investmentData} />
                 </div>
                 <div className="dashboard-card col-span-7 md:col-span-3">
-                  <PortfolioAllocation data={investmentData.stocks} />
+                  <StockNews />
                 </div>
               </div>
 

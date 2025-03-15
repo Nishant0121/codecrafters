@@ -1,73 +1,55 @@
-"use client"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Newspaper } from "lucide-react"; // Make sure this icon exists in lucide-react
 
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  ChartContainer,
-  Tooltip,
-  TooltipContent,
-  Legend,
-} from "@/components/ui/chart"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+const StockNews = () => {
+  const [searchSymbol, setSearchSymbol] = useState("");
+  const navigate = useNavigate();
 
-const data = [
-  { name: "Stocks", value: 65, color: "hsl(var(--primary))" },
-  { name: "Bonds", value: 20, color: "hsl(var(--primary) / 0.7)" },
-  { name: "Cash", value: 10, color: "hsl(var(--primary) / 0.5)" },
-  { name: "Real Estate", value: 5, color: "hsl(var(--primary) / 0.3)" },
-]
+  // Handle search form submit
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchSymbol.trim()) {
+      // Navigate to the stock news route with the entered symbol
+      navigate(`/news-results/${searchSymbol.toUpperCase()}`);
+      setSearchSymbol(""); // Clear search input after submitting
+    }
+  };
 
-export function PortfolioAllocation() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Asset Allocation</CardTitle>
-        <CardDescription>Your current portfolio distribution</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[250px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <ChartContainer data={data}>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <PieChart>
-                <Pie data={data} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={2} dataKey="value">
-                  {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ChartContainer>
-          </ResponsiveContainer>
+    <div className=" flex items-center justify-center p-4 bg-gradient-to-br from-black to-gray-900 text-white">
+      <div className="w-full max-w-xl p-10 bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl border border-white/20">
+        <div className="flex flex-col items-center mb-8">
+          <Newspaper className="w-16 h-16 mb-4 text-indigo-500" />
+          <h1 className="text-3xl font-bold text-center mb-2">Stay Informed (News)</h1>
+          <p className="text-center text-gray-400">
+            Discover the latest stock market news and insights. Enter a stock symbol below to get started.
+          </p>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-4">
-          {data.map((item) => (
-            <div key={item.name} className="flex items-center gap-2">
-              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-              <div className="flex-1 text-sm">
-                <span className="font-medium">{item.name}</span>
-                <span className="ml-2 text-muted-foreground">{item.value}%</span>
-              </div>
-            </div>
-          ))}
+        {/* Search Bar */}
+        <form onSubmit={handleSearchSubmit} className="mb-8 flex gap-4">
+          <input
+            type="text"
+            value={searchSymbol}
+            onChange={(e) => setSearchSymbol(e.target.value)}
+            placeholder="e.g., AAPL, TSLA"
+            className="flex-grow px-4 py-3 bg-transparent border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 transition duration-200"
+          />
+          <button
+            type="submit"
+            className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg text-white font-semibold hover:from-indigo-700 hover:to-purple-700 transition duration-300"
+          >
+            Search
+          </button>
+        </form>
+        <div className="flex justify-center">
+          <p className="text-sm text-gray-400">
+            Trending: <span className="font-medium text-white">AAPL, TSLA, AMZN</span>
+          </p>
         </div>
-      </CardContent>
-    </Card>
-  )
-}
+      </div>
+    </div>
+  );
+};
 
-function CustomTooltip({ active, payload }) {
-  if (active && payload && payload.length) {
-    return (
-      <TooltipContent>
-        <div className="flex flex-col gap-2">
-          <p className="text-muted-foreground">{payload[0].name}</p>
-          <p className="font-medium">{payload[0].value}%</p>
-        </div>
-      </TooltipContent>
-    )
-  }
-  return null
-}
+export default StockNews;
