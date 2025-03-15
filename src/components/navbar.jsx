@@ -1,16 +1,18 @@
 // "use client"  // Removed since it's not needed in plain React
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Alternative for Next.js Link in React
 import { Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { AppContext } from "@/context/appContext";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const { loginUser } = useContext(AppContext);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,6 +21,8 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  console.log(loginUser);
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -59,14 +63,20 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link
-            to="/login"
-            variant="outline"
-            size="sm"
-            className="hidden md:flex"
-          >
-            Sign In
-          </Link>
+          {loginUser ? (
+            <Link to="/profile" variant="outline" size="sm" className="hidden">
+              Profile
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              variant="outline"
+              size="sm"
+              className="hidden md:flex"
+            >
+              Sign In
+            </Link>
+          )}
           <Button size="sm" className="hidden md:flex">
             Get Started
           </Button>
@@ -89,9 +99,15 @@ export function Navbar() {
                     {item.name}
                   </Link>
                 ))}
-                <Link to="/login" size="sm" className="mt-4">
-                  Sign In
-                </Link>
+                {loginUser ? (
+                  <Link to="/profile" size="sm" className="mt-4">
+                    Profile
+                  </Link>
+                ) : (
+                  <Link to="/login" size="sm" className="mt-4">
+                    Sign In
+                  </Link>
+                )}
                 <Button size="sm" variant="outline">
                   Get Started
                 </Button>
