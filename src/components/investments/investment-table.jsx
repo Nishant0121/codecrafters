@@ -33,6 +33,7 @@ export function InvestmentTable({ type = "all" }) {
   const [sortColumn, setSortColumn] = useState("value");
   const [sortDirection, setSortDirection] = useState("desc");
   const { loginUser } = useContext(AppContext);
+  const user = localStorage.getItem("ADuser");
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -74,7 +75,7 @@ export function InvestmentTable({ type = "all" }) {
     };
 
     fetchInvestmentData();
-  }, []);
+  }, [loginUser.uid]);
 
   const handleSort = (column) => {
     if (sortColumn === column) {

@@ -13,6 +13,7 @@ import { AppContext } from "../context/appContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LockIcon, MailIcon, LogOutIcon } from "lucide-react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [user, setUser] = useState(null);
@@ -20,6 +21,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const { loginUser, setloginUser } = useContext(AppContext);
 
@@ -32,6 +34,7 @@ export default function Login() {
       setUser(result.user);
       setloginUser(result.user);
       localStorage.setItem("ADuser", JSON.stringify(result.user));
+      navigate("/");
     } catch (error) {
       setError(error.message);
     }
@@ -51,6 +54,7 @@ export default function Login() {
       setUser(userCredential.user);
       setloginUser(userCredential.user);
       localStorage.setItem("ADuser", JSON.stringify(userCredential.user));
+      navigate("/");
     } catch (error) {
       setError(error.message);
     }
@@ -69,6 +73,8 @@ export default function Login() {
       );
       setUser(userCredential.user);
       setloginUser(userCredential.user);
+      localStorage.setItem("ADuser", JSON.stringify(userCredential.user));
+      navigate("/");
     } catch (error) {
       setError(error.message);
     }
@@ -82,13 +88,13 @@ export default function Login() {
       await signOut(auth);
       setUser(null);
       setloginUser(null);
+      localStorage.removeItem("ADuser");
+      navigate("/login");
     } catch (error) {
       setError(error.message);
     }
     setLoading(false);
   };
-
-  console.log(loginUser);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-slate-900">

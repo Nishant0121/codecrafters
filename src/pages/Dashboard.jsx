@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Activity,
@@ -29,19 +29,22 @@ import { MarketUpdates } from "@/components/dashboard/market-updates";
 import StockNews from "@/components/dashboard/portfolio-allocation";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { WatchlistStocks } from "@/components/dashboard/watchlist-stocks";
+import { AppContext } from "@/context/appContext";
 
 export default function DashboardPage() {
   const [investmentData, setInvestmentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { loginUser } = useContext(AppContext);
 
   useEffect(() => {
     // Fetch investment data from API
     const fetchInvestmentData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/stock/getInvestment/A4pwaNyjpbgVRS5oYYYZyzNtGfm1"
+          `http://localhost:3000/api/stock/getInvestment/${loginUser.uid}`
         );
+        console.log(response);
         if (!response.ok) {
           throw new Error("Failed to fetch investment data");
         }
@@ -69,7 +72,7 @@ export default function DashboardPage() {
       }
     );
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  }, [loginUser]);
 
   return (
     <div className="container mx-auto px-4 pt-20">
