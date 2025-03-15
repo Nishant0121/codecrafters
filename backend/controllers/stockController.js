@@ -1,4 +1,9 @@
-import { Investment, Profile, Wallet } from "../schema/userSchema.js";
+import {
+  Investment,
+  MutualFund,
+  Profile,
+  Wallet,
+} from "../schema/userSchema.js";
 import {
   GoogleGenerativeAI,
   HarmCategory,
@@ -177,5 +182,36 @@ export const getInvestment = async (req, res) => {
   } catch (error) {
     console.error("Error fetching investments:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const createMutualFund = async (req, res) => {
+  try {
+    const { name, stocks } = req.body;
+    const totalAllocation = stocks.reduce(
+      (sum, stock) => sum + stock.allocation,
+      0
+    );
+
+    if (totalAllocation !== 100) {
+      return res.status(400).json({ error: "Total allocation must be 100%" });
+    }
+
+    const newFund = new MutualFund({ name, stocks, totalAllocation });
+    await newFund.save();
+    res
+      .status(201)
+      .json({ message: "Mutual Fund Created", mutualFund: newFund });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const getMutualFunds = async (req, res) => {
+  try {
+    const funds = await MutualFund.find();
+    res.json(funds);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
