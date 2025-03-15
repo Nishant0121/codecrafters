@@ -1,4 +1,4 @@
-import { Profile } from "../schema/userSchema.js";
+import { Profile } from "../model/userSchema.js";
 import {
   GoogleGenerativeAI,
   HarmCategory,
