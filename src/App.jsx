@@ -59,6 +59,7 @@ function App() {
     <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
       <div className="relative flex min-h-screen flex-col">
         {!hideNavbarFooter && <Navbar />}
+        <ChatBot/>
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<LandingPage />} />
