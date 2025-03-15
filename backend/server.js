@@ -28,7 +28,7 @@ const PORT = process.env.PORT || 9000;
 // MONGOURL= mongodb+srv://Nishant0121:nishant0121@ad.wmpdx.mongodb.net/?retryWrites=true&w=majority&appName=AD
 
 mongoose
-  .connect(process.env.MONGOURL)
+  .connect(process.env.MONGOURL || "mongodb+srv://Nishant0121:nishant0121@ad.wmpdx.mongodb.net/?retryWrites=true&w=majority&appName=AD")
 
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));

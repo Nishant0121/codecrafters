@@ -6,9 +6,13 @@ import Login from "./components/login";
 import Register from "./components/register";
 import Layout from "./layout";
 import ErrorPage from "./components/errorpage";
+import ChatBot from "./components/Chatbot";
+import Pay from "./components/Pay";
 import LiveObjectDetection from "./components/imageClass";
 import Home from "./components/home";
-// import StockRecommendation from "./components/AIrec";
+import { sampleStocks } from "./Data/Stocks";
+import Watchlist from "./components/Watchlist";
+import StockPage from "./components/StockPage";
 
 function App() {
   const { setloginUser } = useContext(AppContext);
@@ -32,6 +36,13 @@ function App() {
         {/* <Route path="/rec" element={<StockRecommendation />} /> */}
         <Route path="about" element={<LiveObjectDetection />} />
         <Route path="*" element={<ErrorPage />} />
+        <Route path="/chat" element={<ChatBot />} />
+        <Route path="/pay" element={<Pay />} />
+        <Route
+          path="/watchlist"
+          element={<Watchlist stocks={sampleStocks} />}
+        />
+        <Route path="/watchlist/:symbol" element={<StockPage />} />
       </Route>
 
       {/* Fallback Route for Unmatched Paths */}
