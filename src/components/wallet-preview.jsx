@@ -31,9 +31,9 @@ export function WalletPreview() {
   ];
 
   return (
-    <Card className="border-0 bg-white/10 backdrop-blur-md border border-white/20 text-white">
+    <Card className="border-0 bg-white/10 backdrop-blur-md text-white">
       {/* Wallet Header */}
-      <div className="flex items-center justify-between border-b border-white/20 p-4">
+      <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-blue-500" />
           <div>
