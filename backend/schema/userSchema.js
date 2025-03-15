@@ -67,6 +67,21 @@ const InvestmentSchema = new mongoose.Schema({
   totalPortfolioValue: { type: Number, required: true },
 });
 
+const mutualFundSchema = new mongoose.Schema({
+  name: String,
+  stocks: [
+    {
+      symbol: String,
+      name: String,
+      price: Number,
+      allocation: Number,
+    },
+  ],
+  totalAllocation: Number,
+});
+
+export const MutualFund = mongoose.model("MutualFund", mutualFundSchema);
+
 export const Investment = mongoose.model("Investment", InvestmentSchema);
 
 export const Wallet = mongoose.model("Wallet", WalletSchema);

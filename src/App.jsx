@@ -22,6 +22,7 @@ import StockNews from "./components/StockNews";
 import StockNewsResults from "./components/StocksNewsResults";
 import { sampleStocks } from "./Data/Stocks";
 import FinancialExpectations from "./components/FinancialExpectations";
+import MutualFundCreator from "./components/MFCreator";
 import InsuranceComponent from "./components/Insurance";
 import BondsAndSecuritiesComponent from "./components/Bonds";
 
@@ -51,9 +52,22 @@ function App() {
   }, [setloginUser]);
 
   // If loginUser is null, prevent accessing properties like loginUser.uid
-  // if (!loginUser) {
-  //   return <div className="text-center p-10">Loading...</div>;
-  // }
+  if (!loginUser) {
+    return (
+      <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
+        <div className="relative flex min-h-screen flex-col">
+          {!hideNavbarFooter && <Navbar />}
+          <main className="flex-1">
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Routes>
+          </main>
+          {!hideNavbarFooter && <Footer />}
+        </div>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
@@ -63,8 +77,7 @@ function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/investments" element={<InvestmentsPage />} />
             <Route path="/portfolio" element={<PortfolioPage />} />
@@ -80,6 +93,7 @@ function App() {
             <Route path="/sip" element={<SIPCalculator />} />
             <Route path="/currency" element={<CurrencyConverter />} />
             <Route path="/news" element={<StockNews />} />
+            <Route path="/advisor" element={<MutualFundCreator />} />
             <Route
               path="/news-results/:symbol"
               element={<StockNewsResults />}
