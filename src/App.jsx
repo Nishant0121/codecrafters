@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
@@ -16,7 +16,7 @@ import ErrorPage from "./components/errorpage";
 import ChatBot from "./components/Chatbot";
 import Pay from "./components/Pay";
 import LiveObjectDetection from "./components/imageClass";
-import {sampleStocks} from "./Data/Stocks"
+import { sampleStocks } from "./Data/Stocks";
 import Watchlist from "./components/Watchlist";
 import StockPage from "./components/StockPage";
 
@@ -46,7 +46,10 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
             <Route path="/chat" element={<ChatBot />} />
             <Route path="/pay" element={<Pay />} />
-            <Route path="/watchlist" element={<Watchlist stocks={sampleStocks} />} />
+            <Route
+              path="/watchlist"
+              element={<Watchlist stocks={sampleStocks} />}
+            />
             <Route path="/watchlist/:symbol" element={<StockPage />} />
           </Routes>
         </main>
