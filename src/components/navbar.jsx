@@ -22,11 +22,11 @@ export function Navbar() {
   }, []);
 
   const navItems = [
-    { name: "Home", href: "/" },
     { name: "Dashboard", href: "/dashboard" },
     { name: "Investments", href: "/investments" },
     { name: "Portfolio", href: "/portfolio" },
     { name: "Watchlist", href: "/watchlist" },
+    { name: "Wallet", href: "/pay" },
   ];
 
   return (

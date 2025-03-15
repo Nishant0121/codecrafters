@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import axios from "axios";
 import { AppContext } from "@/context/appContext";
 
-const Watchlist = ({ stocks = [] }) => {
+const Watchlist = ({ stocks = [], uid }) => {
   const watchlistRef = useRef(null);
   const [expandedStock, setExpandedStock] = useState(null);
   const [quantity, setQuantity] = useState(1);

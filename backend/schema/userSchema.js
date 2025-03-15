@@ -48,6 +48,27 @@ const WalletSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const InvestmentSchema = new mongoose.Schema({
+  uid: { type: String, required: true },
+  stocks: [
+    {
+      id: String,
+      symbol: String,
+      name: String,
+      quantity: Number,
+      price: Number,
+      averageCost: Number,
+      value: Number,
+      profitLoss: Number,
+      profitLossPercent: Number,
+      allocation: Number,
+    },
+  ],
+  totalPortfolioValue: { type: Number, required: true },
+});
+
+export const Investment = mongoose.model("Investment", InvestmentSchema);
+
 export const Wallet = mongoose.model("Wallet", WalletSchema);
 
 export const Profile = mongoose.model("Profile", ProfileSchema);
