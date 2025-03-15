@@ -33,6 +33,7 @@ export function InvestmentTable({ type = "all" }) {
   const [sortColumn, setSortColumn] = useState("value");
   const [sortDirection, setSortDirection] = useState("desc");
   const { loginUser } = useContext(AppContext);
+  const user = localStorage.getItem("ADuser");
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,9 +41,11 @@ export function InvestmentTable({ type = "all" }) {
 
   useEffect(() => {
     const fetchInvestmentData = async () => {
+      console.log(loginUser)
+
       try {
         const response = await fetch(
-          `http://localhost:3000/api/stock/getProfile/${loginUser.uid}`
+          `http://localhost:3000/api/stock/getProfile/${loginUser?.uid}`
         );
         const data = await response.json();
 
@@ -74,7 +77,7 @@ export function InvestmentTable({ type = "all" }) {
     };
 
     fetchInvestmentData();
-  }, []);
+  }, [loginUser]);
 
   const handleSort = (column) => {
     if (sortColumn === column) {
