@@ -32,7 +32,9 @@ export function Navbar() {
     <header
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-300",
-        isScrolled ? "bg-background/80 backdrop-blur-md shadow-sm" : "bg-transparent"
+        isScrolled
+          ? "bg-background/80 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
       )}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -57,9 +59,14 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" className="hidden md:flex">
+          <Link
+            to="/login"
+            variant="outline"
+            size="sm"
+            className="hidden md:flex"
+          >
             Sign In
-          </Button>
+          </Link>
           <Button size="sm" className="hidden md:flex">
             Get Started
           </Button>
@@ -74,13 +81,17 @@ export function Navbar() {
             <SheetContent side="right">
               <nav className="grid gap-6 text-lg font-medium">
                 {navItems.map((item) => (
-                  <Link key={item.name} to={item.href} className="hover:text-primary">
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="hover:text-primary"
+                  >
                     {item.name}
                   </Link>
                 ))}
-                <Button size="sm" className="mt-4">
+                <Link to="/login" size="sm" className="mt-4">
                   Sign In
-                </Button>
+                </Link>
                 <Button size="sm" variant="outline">
                   Get Started
                 </Button>
