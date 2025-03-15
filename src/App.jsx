@@ -10,6 +10,9 @@ import ChatBot from "./components/Chatbot";
 import Pay from "./components/Pay";
 import LiveObjectDetection from "./components/imageClass";
 import Home from "./components/home";
+import {sampleStocks} from "./Data/Stocks"
+import Watchlist from "./components/Watchlist";
+import StockPage from "./components/StockPage";
 
 function App() {
   const { data } = useContext(AppContext);
@@ -27,6 +30,8 @@ function App() {
         <Route path="*" element={<ErrorPage />} />
         <Route path="/chat" element={<ChatBot />} />
         <Route path="/pay" element={<Pay />} />
+        <Route path="/watchlist" element={<Watchlist stocks={sampleStocks} />} />
+        <Route path="/watchlist/:symbol" element={<StockPage />} />
       </Route>
       <Route path="*" element={<ErrorPage />} />
     </Routes>
