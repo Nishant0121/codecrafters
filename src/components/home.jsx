@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../context/config"; // Import the global variable
+import { AppContext } from "@/context/appContext";
 
 export default function Home() {
   const [data, setData] = useState(null);
+  const { loginUser } = useContext(AppContext);
 
   useEffect(() => {
     axios
@@ -19,6 +21,7 @@ export default function Home() {
   return (
     <div>
       <h1>Home Page</h1>
+      {/* <h1>{loginUser}</h1> */}
       {data ? <pre>{data}</pre> : <p>Loading...</p>}
     </div>
   );

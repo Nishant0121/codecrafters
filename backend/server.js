@@ -3,6 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import apiRoutes from "./routes/apiRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import stockRoutes from "./routes/stockRoute.js";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -38,6 +39,7 @@ app.use(express.json());
 // Import routes
 app.use("/api", apiRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/stock", stockRoutes);
 
 // Start server
 app.listen(PORT, () => {

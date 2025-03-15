@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { AppContext } from "./context/appContext";
@@ -8,9 +8,17 @@ import Layout from "./layout";
 import ErrorPage from "./components/errorpage";
 import LiveObjectDetection from "./components/imageClass";
 import Home from "./components/home";
+// import StockRecommendation from "./components/AIrec";
 
 function App() {
-  const { data } = useContext(AppContext);
+  const { setloginUser } = useContext(AppContext);
+
+  useEffect(() => {
+    const user = localStorage.getItem("ADuser");
+    if (user) {
+      setloginUser(JSON.parse(user));
+    }
+  }, [setloginUser]); // Added dependency array
 
   return (
     <Routes>
@@ -21,9 +29,12 @@ function App() {
       {/* Layout Wrapper for Other Routes */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
+        {/* <Route path="/rec" element={<StockRecommendation />} /> */}
         <Route path="about" element={<LiveObjectDetection />} />
         <Route path="*" element={<ErrorPage />} />
       </Route>
+
+      {/* Fallback Route for Unmatched Paths */}
       <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
