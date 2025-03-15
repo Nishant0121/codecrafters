@@ -25,7 +25,8 @@ function App() {
   const { data } = useContext(AppContext);
   const location = useLocation();
 
-  const hideNavbarFooter = location.pathname === "/login" || location.pathname === "/register";
+  const hideNavbarFooter =
+    location.pathname === "/login" || location.pathname === "/register";
   const { setloginUser } = useContext(AppContext);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ function App() {
     if (user) {
       setloginUser(JSON.parse(user));
     }
-  }, [setloginUser]); 
+  }, [setloginUser]);
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
@@ -51,7 +52,10 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
             <Route path="/chat" element={<ChatBot />} />
             <Route path="/pay" element={<Pay />} />
-            <Route path="/watchlist" element={<Watchlist stocks={sampleStocks} />} />
+            <Route
+              path="/watchlist"
+              element={<Watchlist stocks={sampleStocks} />}
+            />
             <Route path="/watchlist/:symbol" element={<StockPage />} />
             <Route path="/sip" element={<SIPCalculator />} />
           </Routes>
