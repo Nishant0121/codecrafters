@@ -22,6 +22,7 @@ import StockNews from "./components/StockNews";
 import StockNewsResults from "./components/StocksNewsResults";
 import { sampleStocks } from "./Data/Stocks";
 import FinancialExpectations from "./components/FinancialExpectations";
+import InsuranceComponent from "./components/Insurance";
 
 function App() {
   const { loginUser, setloginUser } = useContext(AppContext);
@@ -49,9 +50,9 @@ function App() {
   }, [setloginUser]);
 
   // If loginUser is null, prevent accessing properties like loginUser.uid
-  if (!loginUser) {
-    return <div className="text-center p-10">Loading...</div>;
-  }
+  // if (!loginUser) {
+  //   return <div className="text-center p-10">Loading...</div>;
+  // }
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
@@ -85,6 +86,7 @@ function App() {
               path="/financial-expectations"
               element={<FinancialExpectations />}
             />
+            <Route path="/insurance" element={<InsuranceComponent />} />
           </Routes>
         </main>
         {!hideNavbarFooter && <Footer />}
