@@ -6,6 +6,8 @@ import Login from "./components/login";
 import Register from "./components/register";
 import Layout from "./layout";
 import ErrorPage from "./components/errorpage";
+import LiveObjectDetection from "./components/imageClass";
+import Home from "./components/home";
 
 function App() {
   const { data } = useContext(AppContext);
@@ -18,8 +20,8 @@ function App() {
 
       {/* Layout Wrapper for Other Routes */}
       <Route path="/" element={<Layout />}>
-        <Route index element={<h1>{data}</h1>} />
-        <Route path="about" element={<Login />} />
+        <Route index element={<Home />} />
+        <Route path="about" element={<LiveObjectDetection />} />
         <Route path="*" element={<ErrorPage />} />
       </Route>
       <Route path="*" element={<ErrorPage />} />
