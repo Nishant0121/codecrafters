@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, Wallet } from "lucide-react";
+import { Menu, Wallet , LineChart } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -8,6 +8,7 @@ import { WalletPreview } from "@/components/wallet-preview";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { AppContext } from "../context/appContext";
+import StockIndexPreview from "./StockIndices";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -58,10 +59,24 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
+
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="relative">
+                <LineChart className="h-7c w-7 text-green-600" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[380px] p-0" align="end" sideOffset={8}>
+              <StockIndexPreview />
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="relative">
-                <Wallet className="h-5 w-5" />
+                <Wallet className="h-7 w-7" />
                 <span className="sr-only">Open wallet</span>
                 <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
                   3
