@@ -14,6 +14,8 @@ import {
   Legend 
 } from 'chart.js';
 import { sampleStocks } from '../Data/Stocks';
+import FinancialExpectations from './FinancialExpectations';
+import StocksPrice from './StockGraph';
 
 // Register the necessary chart components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
@@ -202,7 +204,7 @@ const StockPage = () => {
         {/* Left Column: Charts */}
         <div className="space-y-6">
           {/* Stock Price Graph */}
-          <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-2xl border border-white/20">
+          {/* <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-2xl border border-white/20">
             <h3 className="text-xl font-semibold mb-4 text-white">Price History</h3>
             <div className="h-64">
               <Line
@@ -220,7 +222,8 @@ const StockPage = () => {
                 }}
               />
             </div>
-          </div>
+          </div> */}
+          <StocksPrice symbol={stock.symbol} />
 
           {/* Volume Graph */}
           <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-2xl border border-white/20">
@@ -328,7 +331,9 @@ const StockPage = () => {
           {/* News Section */}
           {renderNews()}
         </div>
+        
       </div>
+      <FinancialExpectations symbol={symbol} />
     </div>
   );
 };
