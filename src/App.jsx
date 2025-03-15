@@ -12,9 +12,17 @@ import InvestmentsPage from "./pages/Investments";
 import PortfolioPage from "./pages/Portfolio";
 import "./App.css";
 import "./index.css";
+import ErrorPage from "./components/errorpage";
+import ChatBot from "./components/Chatbot";
+import Pay from "./components/Pay";
+import LiveObjectDetection from "./components/imageClass";
+import {sampleStocks} from "./Data/Stocks"
+import Watchlist from "./components/Watchlist";
+import StockPage from "./components/StockPage";
 
 function App() {
-  const { data, setData } = useContext(AppContext);
+  const { data } = useContext(AppContext);
+
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
       <div className="relative flex min-h-screen flex-col">
@@ -27,6 +35,12 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/investments" element={<InvestmentsPage />} />
             <Route path="/portfolio" element={<PortfolioPage />} />
+            <Route path="about" element={<LiveObjectDetection />} />
+            <Route path="*" element={<ErrorPage />} />
+            <Route path="/chat" element={<ChatBot />} />
+            <Route path="/pay" element={<Pay />} />
+            <Route path="/watchlist" element={<Watchlist stocks={sampleStocks} />} />
+            <Route path="/watchlist/:symbol" element={<StockPage />} />
           </Routes>
         </main>
         <Footer />
