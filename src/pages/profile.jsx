@@ -22,7 +22,23 @@ import {
   TableCell,
   TableBody,
 } from "@/components/ui/table";
-import { ArrowUpRight, DollarSign, LogOut, TrendingUp, Wallet, Clock, Edit, ChevronUp, ChevronDown, BarChart3, PieChartIcon, RefreshCw, User, Calendar, ArrowRight } from 'lucide-react';
+import {
+  ArrowUpRight,
+  DollarSign,
+  LogOut,
+  TrendingUp,
+  Wallet,
+  Clock,
+  Edit,
+  ChevronUp,
+  ChevronDown,
+  BarChart3,
+  PieChartIcon,
+  RefreshCw,
+  User,
+  Calendar,
+  ArrowRight,
+} from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -49,23 +65,27 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState("overview");
   const { loginUser } = useContext(AppContext);
   const navigate = useNavigate();
-  
+
   const navigateToPay = () => {
-    navigate('/pay');
-  }
+    navigate("/pay");
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [investmentRes, profileRes, walletRes] = await Promise.all([
-          fetch(`http://localhost:3000/api/stock/getInvestment/${loginUser?.uid}`),
+          fetch(
+            `http://localhost:3000/api/stock/getInvestment/${loginUser?.uid}`
+          ),
           fetch(`http://localhost:3000/api/stock/getProfile/${loginUser?.uid}`),
-          fetch(`http://localhost:3000/api/stock/wallet/balance/${loginUser?.uid}`),
+          fetch(
+            `http://localhost:3000/api/stock/wallet/balance/${loginUser?.uid}`
+          ),
         ]);
 
-        if (!investmentRes.ok || !profileRes.ok || !walletRes.ok) {
-          throw new Error("Failed to fetch data");
-        }
+        // if (!investmentRes.ok || !profileRes.ok || !walletRes.ok) {
+        //   throw new Error("Failed to fetch data");
+        // }
 
         const investment = await investmentRes.json();
         const profile = await profileRes.json();
@@ -100,7 +120,14 @@ export default function Profile() {
     window.location.reload();
   };
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8", "#82ca9d"];
+  const COLORS = [
+    "#0088FE",
+    "#00C49F",
+    "#FFBB28",
+    "#FF8042",
+    "#8884d8",
+    "#82ca9d",
+  ];
 
   // Sort transactions by date (latest first) & take top 10
   const topTransactions =
@@ -122,14 +149,15 @@ export default function Profile() {
   };
 
   // Prepare transaction data for bar chart
-  const transactionChartData = walletData?.transactions
-    ?.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
-    .slice(-7)
-    .map((tx) => ({
-      date: formatDate(tx.timestamp),
-      amount: tx.amount,
-      type: tx.type,
-    })) || [];
+  const transactionChartData =
+    walletData?.transactions
+      ?.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
+      .slice(-7)
+      .map((tx) => ({
+        date: formatDate(tx.timestamp),
+        amount: tx.amount,
+        type: tx.type,
+      })) || [];
 
   // Calculate portfolio growth
   const portfolioGrowth = investmentData?.totalPortfolioValue
@@ -176,10 +204,12 @@ export default function Profile() {
       ) : error ? (
         <div className="text-center p-12 bg-red-500/10 rounded-xl border border-red-500/20 max-w-md mx-auto">
           <div className="text-red-400 text-4xl mb-4">⚠️</div>
-          <h3 className="text-xl font-bold text-red-400 mb-2">Error Loading Profile</h3>
+          <h3 className="text-xl font-bold text-red-400 mb-2">
+            Error Loading Profile
+          </h3>
           <p className="text-gray-400">{error}</p>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="mt-4 border-red-500/20 text-red-400 hover:bg-red-500/10"
             onClick={() => window.location.reload()}
           >
@@ -188,25 +218,39 @@ export default function Profile() {
           </Button>
         </div>
       ) : (
-        <motion.div 
+        <motion.div
           className="max-w-7xl mx-auto"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="mb-8 pt-13">
+          <Tabs
+            defaultValue="overview"
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="mb-8 pt-13"
+          >
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
                 Financial Dashboard
               </h1>
               <TabsList className="bg-white/5 border border-white/0">
-                <TabsTrigger value="overview" className="data-[state=active]:bg-white/10">
+                <TabsTrigger
+                  value="overview"
+                  className="data-[state=active]:bg-white/10"
+                >
                   Overview
                 </TabsTrigger>
-                <TabsTrigger value="portfolio" className="data-[state=active]:bg-white/10">
+                <TabsTrigger
+                  value="portfolio"
+                  className="data-[state=active]:bg-white/10"
+                >
                   Portfolio
                 </TabsTrigger>
-                <TabsTrigger value="transactions" className="data-[state=active]:bg-white/10">
+                <TabsTrigger
+                  value="transactions"
+                  className="data-[state=active]:bg-white/10"
+                >
                   Transactions
                 </TabsTrigger>
               </TabsList>
@@ -223,7 +267,10 @@ export default function Profile() {
                       <div className="flex flex-col items-center relative">
                         <Avatar className="w-24 h-24 border-4 border-white/10 shadow-xl">
                           <AvatarImage
-                            src={user?.photoURL || "https://avatar.iran.liara.run/public/boy"}
+                            src={
+                              user?.photoURL ||
+                              "https://avatar.iran.liara.run/public/boy"
+                            }
                             alt="User"
                           />
                           <AvatarFallback className="bg-gradient-to-br from-blue-600 to-purple-600">
@@ -239,11 +286,15 @@ export default function Profile() {
                       <h2 className="text-2xl font-bold mt-2">
                         {user?.displayName || "User"}
                       </h2>
-                      <p className="text-gray-400 text-sm">{user?.email || "user@example.com"}</p>
-                      
+                      <p className="text-gray-400 text-sm">
+                        {user?.email || "user@example.com"}
+                      </p>
+
                       <div className="mt-6 grid grid-cols-2 gap-4 text-center">
                         <div className="bg-white/5 rounded-lg p-3">
-                          <p className="text-gray-400 text-xs mb-1">Member Since</p>
+                          <p className="text-gray-400 text-xs mb-1">
+                            Member Since
+                          </p>
                           <p className="font-medium">Jan 2023</p>
                         </div>
                         <div className="bg-white/5 rounded-lg p-3">
@@ -253,12 +304,15 @@ export default function Profile() {
                       </div>
                     </CardContent>
                     <CardFooter className="flex justify-between p-4 border-t border-white/5 mt-4">
-                      <Button variant="outline" className="border-white/10 hover:bg-white/5">
+                      <Button
+                        variant="outline"
+                        className="border-white/10 hover:bg-white/5"
+                      >
                         <Edit className="w-4 h-4 mr-2" />
                         Edit
                       </Button>
-                      <Button 
-                        variant="destructive" 
+                      <Button
+                        variant="destructive"
                         onClick={handleLogout}
                         className="bg-red-500/20 text-red-400 hover:bg-red-500/30 border-0"
                       >
@@ -286,9 +340,14 @@ export default function Profile() {
                         <div className="bg-white/5 rounded-xl p-5 border border-white/10">
                           <div className="flex justify-between items-start mb-4">
                             <div>
-                              <p className="text-gray-400 text-sm">Portfolio Value</p>
+                              <p className="text-gray-400 text-sm">
+                                Portfolio Value
+                              </p>
                               <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                                ${investmentData?.totalPortfolioValue?.toFixed(2) || "0.00"}
+                                $
+                                {investmentData?.totalPortfolioValue?.toFixed(
+                                  2
+                                ) || "0.00"}
                               </h3>
                             </div>
                             <div className="bg-blue-500/20 p-2 rounded-lg">
@@ -297,23 +356,40 @@ export default function Profile() {
                           </div>
                           <div className="flex items-center gap-2 mb-2">
                             <div className="flex-1">
-                              <Progress value={75} className="h-2 bg-white/10" />
+                              <Progress
+                                value={75}
+                                className="h-2 bg-white/10"
+                              />
                             </div>
                             <span className="text-xs text-gray-400">75%</span>
                           </div>
                           <div className="flex items-center mt-4">
-                            <Badge className={`${portfolioGrowth >= 0 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'} border-0`}>
-                              {portfolioGrowth >= 0 ? <ChevronUp className="h-3 w-3 mr-1" /> : <ChevronDown className="h-3 w-3 mr-1" />}
+                            <Badge
+                              className={`${
+                                portfolioGrowth >= 0
+                                  ? "bg-green-500/20 text-green-400"
+                                  : "bg-red-500/20 text-red-400"
+                              } border-0`}
+                            >
+                              {portfolioGrowth >= 0 ? (
+                                <ChevronUp className="h-3 w-3 mr-1" />
+                              ) : (
+                                <ChevronDown className="h-3 w-3 mr-1" />
+                              )}
                               {Math.abs(portfolioGrowth).toFixed(2)}%
                             </Badge>
-                            <span className="text-xs text-gray-400 ml-2">vs. initial investment</span>
+                            <span className="text-xs text-gray-400 ml-2">
+                              vs. initial investment
+                            </span>
                           </div>
                         </div>
-                        
+
                         <div className="bg-white/5 rounded-xl p-5 border border-white/10">
                           <div className="flex justify-between items-start mb-4">
                             <div>
-                              <p className="text-gray-400 text-sm">Wallet Balance</p>
+                              <p className="text-gray-400 text-sm">
+                                Wallet Balance
+                              </p>
                               <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400">
                                 ${walletData?.balance?.toFixed(2) || "0.00"}
                               </h3>
@@ -322,13 +398,21 @@ export default function Profile() {
                               <Wallet className="h-6 w-6 text-green-400" />
                             </div>
                           </div>
-                          
+
                           <div className="grid grid-cols-2 gap-4 mt-6">
-                            <Button variant="outline" className="border-white/10 hover:bg-white/5 h-10" onClick={navigateToPay}>
+                            <Button
+                              variant="outline"
+                              className="border-white/10 hover:bg-white/5 h-10"
+                              onClick={navigateToPay}
+                            >
                               <ArrowUpRight className="h-4 w-4 mr-2" />
                               Deposit
                             </Button>
-                            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-10 border-0" onClick={navigateToPay}>x
+                            <Button
+                              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-10 border-0"
+                              onClick={navigateToPay}
+                            >
+                              x
                               <ArrowRight className="h-4 w-4 mr-2" />
                               Transfer
                             </Button>
@@ -367,20 +451,32 @@ export default function Profile() {
                               fill="#8884d8"
                               dataKey="value"
                               paddingAngle={2}
-                              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                              label={({ name, percent }) =>
+                                `${name} ${(percent * 100).toFixed(0)}%`
+                              }
                               labelLine={false}
                             >
                               {pieChartData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                <Cell
+                                  key={`cell-${index}`}
+                                  fill={COLORS[index % COLORS.length]}
+                                />
                               ))}
                             </Pie>
-                            <RechartTooltip formatter={(value) => [`$${value.toFixed(2)}`, 'Value']} />
+                            <RechartTooltip
+                              formatter={(value) => [
+                                `$${value.toFixed(2)}`,
+                                "Value",
+                              ]}
+                            />
                           </PieChart>
                         </ResponsiveContainer>
                       ) : (
                         <div className="flex flex-col items-center justify-center h-[300px] bg-white/5 rounded-xl">
                           <PieChartIcon className="h-12 w-12 text-gray-600 mb-4" />
-                          <p className="text-gray-400">No portfolio data available</p>
+                          <p className="text-gray-400">
+                            No portfolio data available
+                          </p>
                         </div>
                       )}
                     </CardContent>
@@ -403,23 +499,48 @@ export default function Profile() {
                       {transactionChartData.length > 0 ? (
                         <ResponsiveContainer width="100%" height={300}>
                           <BarChart data={transactionChartData}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
+                            <CartesianGrid
+                              strokeDasharray="3 3"
+                              stroke="#444"
+                              vertical={false}
+                            />
                             <XAxis dataKey="date" tick={{ fill: "#aaa" }} />
                             <YAxis tick={{ fill: "#aaa" }} />
-                            <RechartTooltip 
-                              formatter={(value, name) => [`$${value}`, name === 'amount' ? 'Amount' : name]}
+                            <RechartTooltip
+                              formatter={(value, name) => [
+                                `$${value}`,
+                                name === "amount" ? "Amount" : name,
+                              ]}
                               labelFormatter={(label) => `Date: ${label}`}
-                              contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }}
+                              contentStyle={{
+                                backgroundColor: "#1f2937",
+                                border: "none",
+                                borderRadius: "8px",
+                              }}
                             />
-                            <Bar 
-                              dataKey="amount" 
-                              fill="url(#colorGradient)" 
+                            <Bar
+                              dataKey="amount"
+                              fill="url(#colorGradient)"
                               radius={[4, 4, 0, 0]}
                             />
                             <defs>
-                              <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                                <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.8}/>
+                              <linearGradient
+                                id="colorGradient"
+                                x1="0"
+                                y1="0"
+                                x2="0"
+                                y2="1"
+                              >
+                                <stop
+                                  offset="0%"
+                                  stopColor="#3b82f6"
+                                  stopOpacity={0.8}
+                                />
+                                <stop
+                                  offset="100%"
+                                  stopColor="#8b5cf6"
+                                  stopOpacity={0.8}
+                                />
                               </linearGradient>
                             </defs>
                           </BarChart>
@@ -427,7 +548,9 @@ export default function Profile() {
                       ) : (
                         <div className="flex flex-col items-center justify-center h-[300px] bg-white/5 rounded-xl">
                           <BarChart3 className="h-12 w-12 text-gray-600 mb-4" />
-                          <p className="text-gray-400">No transaction data available</p>
+                          <p className="text-gray-400">
+                            No transaction data available
+                          </p>
                         </div>
                       )}
                     </CardContent>
@@ -437,7 +560,7 @@ export default function Profile() {
             </TabsContent>
 
             <TabsContent value="portfolio">
-              <motion.div 
+              <motion.div
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -460,29 +583,65 @@ export default function Profile() {
                           <Table>
                             <TableHeader className="bg-white/5">
                               <TableRow className="hover:bg-white/5 border-white/10">
-                                <TableCell className="font-medium">Symbol</TableCell>
-                                <TableCell className="font-medium">Quantity</TableCell>
-                                <TableCell className="font-medium">Buy Price</TableCell>
-                                <TableCell className="font-medium">Current Value</TableCell>
-                                <TableCell className="font-medium">P/L</TableCell>
+                                <TableCell className="font-medium">
+                                  Symbol
+                                </TableCell>
+                                <TableCell className="font-medium">
+                                  Quantity
+                                </TableCell>
+                                <TableCell className="font-medium">
+                                  Buy Price
+                                </TableCell>
+                                <TableCell className="font-medium">
+                                  Current Value
+                                </TableCell>
+                                <TableCell className="font-medium">
+                                  P/L
+                                </TableCell>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
                               {profileData.stocks.map((stock, index) => {
-                                const currentValue = stock.quantity * stock.buyPrice;
-                                const profit = currentValue - (stock.quantity * stock.buyPrice);
-                                const profitPercentage = (profit / (stock.quantity * stock.buyPrice)) * 100;
-                                
+                                const currentValue =
+                                  stock.quantity * stock.buyPrice;
+                                const profit =
+                                  currentValue -
+                                  stock.quantity * stock.buyPrice;
+                                const profitPercentage =
+                                  (profit / (stock.quantity * stock.buyPrice)) *
+                                  100;
+
                                 return (
-                                  <TableRow key={index} className="hover:bg-white/5 border-white/10">
-                                    <TableCell className="font-medium">{stock.symbol}</TableCell>
+                                  <TableRow
+                                    key={index}
+                                    className="hover:bg-white/5 border-white/10"
+                                  >
+                                    <TableCell className="font-medium">
+                                      {stock.symbol}
+                                    </TableCell>
                                     <TableCell>{stock.quantity}</TableCell>
-                                    <TableCell>${stock.buyPrice.toFixed(2)}</TableCell>
-                                    <TableCell>${currentValue.toFixed(2)}</TableCell>
-                                    <TableCell className={profit >= 0 ? "text-green-400" : "text-red-400"}>
+                                    <TableCell>
+                                      ${stock.buyPrice.toFixed(2)}
+                                    </TableCell>
+                                    <TableCell>
+                                      ${currentValue.toFixed(2)}
+                                    </TableCell>
+                                    <TableCell
+                                      className={
+                                        profit >= 0
+                                          ? "text-green-400"
+                                          : "text-red-400"
+                                      }
+                                    >
                                       <div className="flex items-center">
-                                        {profit >= 0 ? <ChevronUp className="h-4 w-4 mr-1" /> : <ChevronDown className="h-4 w-4 mr-1" />}
-                                        ${Math.abs(profit).toFixed(2)} ({Math.abs(profitPercentage).toFixed(2)}%)
+                                        {profit >= 0 ? (
+                                          <ChevronUp className="h-4 w-4 mr-1" />
+                                        ) : (
+                                          <ChevronDown className="h-4 w-4 mr-1" />
+                                        )}
+                                        ${Math.abs(profit).toFixed(2)} (
+                                        {Math.abs(profitPercentage).toFixed(2)}
+                                        %)
                                       </div>
                                     </TableCell>
                                   </TableRow>
@@ -494,7 +653,9 @@ export default function Profile() {
                       ) : (
                         <div className="flex flex-col items-center justify-center py-12 bg-white/5 rounded-xl">
                           <BarChart3 className="h-12 w-12 text-gray-600 mb-4" />
-                          <p className="text-gray-400 mb-2">No stocks in your portfolio</p>
+                          <p className="text-gray-400 mb-2">
+                            No stocks in your portfolio
+                          </p>
                           <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 mt-2 border-0">
                             Start Investing
                           </Button>
@@ -507,7 +668,7 @@ export default function Profile() {
             </TabsContent>
 
             <TabsContent value="transactions">
-              <motion.div 
+              <motion.div
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -530,36 +691,69 @@ export default function Profile() {
                           <Table>
                             <TableHeader className="bg-white/5">
                               <TableRow className="hover:bg-white/5 border-white/10">
-                                <TableCell className="font-medium">Date</TableCell>
-                                <TableCell className="font-medium">Type</TableCell>
-                                <TableCell className="font-medium">Amount</TableCell>
-                                <TableCell className="font-medium">Status</TableCell>
+                                <TableCell className="font-medium">
+                                  Date
+                                </TableCell>
+                                <TableCell className="font-medium">
+                                  Type
+                                </TableCell>
+                                <TableCell className="font-medium">
+                                  Amount
+                                </TableCell>
+                                <TableCell className="font-medium">
+                                  Status
+                                </TableCell>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
                               {topTransactions.map((tx) => (
-                                <TableRow key={tx._id} className="hover:bg-white/5 border-white/10">
+                                <TableRow
+                                  key={tx._id}
+                                  className="hover:bg-white/5 border-white/10"
+                                >
                                   <TableCell>
                                     <div className="flex items-center">
                                       <Calendar className="h-4 w-4 mr-2 text-gray-400" />
-                                      {new Date(tx.timestamp).toLocaleDateString()}
+                                      {new Date(
+                                        tx.timestamp
+                                      ).toLocaleDateString()}
                                     </div>
                                     <div className="text-xs text-gray-400">
-                                      {new Date(tx.timestamp).toLocaleTimeString()}
+                                      {new Date(
+                                        tx.timestamp
+                                      ).toLocaleTimeString()}
                                     </div>
                                   </TableCell>
                                   <TableCell>
-                                    <Badge className={tx.type === "credit" ? "bg-green-500/20 text-green-400 border-0" : "bg-red-500/20 text-red-400 border-0"}>
-                                      {tx.type === "credit" ? "CREDIT" : "DEBIT"}
+                                    <Badge
+                                      className={
+                                        tx.type === "credit"
+                                          ? "bg-green-500/20 text-green-400 border-0"
+                                          : "bg-red-500/20 text-red-400 border-0"
+                                      }
+                                    >
+                                      {tx.type === "credit"
+                                        ? "CREDIT"
+                                        : "DEBIT"}
                                     </Badge>
                                   </TableCell>
                                   <TableCell className="font-medium">
-                                    <div className={tx.type === "credit" ? "text-green-400" : "text-red-400"}>
-                                      {tx.type === "credit" ? "+" : "-"}${tx.amount}
+                                    <div
+                                      className={
+                                        tx.type === "credit"
+                                          ? "text-green-400"
+                                          : "text-red-400"
+                                      }
+                                    >
+                                      {tx.type === "credit" ? "+" : "-"}$
+                                      {tx.amount}
                                     </div>
                                   </TableCell>
                                   <TableCell>
-                                    <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20">
+                                    <Badge
+                                      variant="outline"
+                                      className="bg-blue-500/10 text-blue-400 border-blue-500/20"
+                                    >
                                       Completed
                                     </Badge>
                                   </TableCell>
@@ -571,7 +765,9 @@ export default function Profile() {
                       ) : (
                         <div className="flex flex-col items-center justify-center py-12 bg-white/5 rounded-xl">
                           <Clock className="h-12 w-12 text-gray-600 mb-4" />
-                          <p className="text-gray-400">No transaction history available</p>
+                          <p className="text-gray-400">
+                            No transaction history available
+                          </p>
                         </div>
                       )}
                     </CardContent>
