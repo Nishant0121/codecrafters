@@ -27,6 +27,7 @@ import InsuranceComponent from "./components/Insurance";
 import BondsAndSecuritiesComponent from "./components/Bonds";
 import Profile from "./pages/profile";
 import StockIndexPreview from "./components/StockIndices";
+import StockRecommendations from "./components/Recommendations";
 
 function App() {
   const { loginUser, setloginUser } = useContext(AppContext);
@@ -108,6 +109,7 @@ function App() {
             <Route path="/insurance" element={<InsuranceComponent />} />
             <Route path="/bonds" element={<BondsAndSecuritiesComponent />} />
             <Route path="/indices" element={<StockIndexPreview />} />
+            <Route path="/recommendations" element={<StockRecommendations />} />
           </Routes>
         </main>
         {!hideNavbarFooter && <Footer />}

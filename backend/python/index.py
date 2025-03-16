@@ -7,6 +7,24 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)  
 
+
+# Load the trained model
+model = joblib.load("stock_recommendation_model.pkl")
+
+@app.route("/recommend", methods=["POST"])
+def recommend():
+    data = request.json
+    features = [
+        data['sma_50'],
+        data['sma_200'],
+        data['rsi'],
+        data['macd'],
+        data['daily_return']
+    ]
+    prediction = model.predict([features])
+    return jsonify({"recommendation": int(prediction[0])})
+
+
 @app.route("/predict/<symbol>", methods=["GET"])
 def predict_stock(symbol):
     try:
