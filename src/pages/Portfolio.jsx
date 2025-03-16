@@ -18,11 +18,43 @@ import { AssetAllocation } from "@/components/portfolio/asset-allocation";
 import { RiskAssessment } from "@/components/portfolio/risk-assessment";
 import { DiversificationAnalysis } from "@/components/portfolio/diversification-analysis";
 import { AppContext } from "@/context/appContext";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import axios from "axios";
+
 
 export default function PortfolioPage() {
   const { loginUser } = useContext(AppContext);
 
+  const generateGeminiResponse = async (prompt) => {
+    try {
+      const model = genAI.getGenerativeModel({
+        model: "gemini-2.0-flash",
+        systemInstruction: "give me a json output, first field should have rating out of 100, diversification of investor profile, second field contains comments on how user can improve diversification.\ngive comments on improving investor profile",
+      });
+      const result = await model.generateContent(prompt);
+      let response = result.response.text();
+
+      // Extract JSON from response
+      const jsonMatch = response.match(/json\s*([\s\S]*?)\s*/);
+      if (jsonMatch && jsonMatch[1]) {
+        response = jsonMatch[1];
+      }
+
+      const parsedResponse = JSON.parse(response);
+      return parsedResponse;
+    } catch (error) {
+      console.error("Error generating response:", error);
+      return null;
+    }
+  };
+
+
+
   useEffect(() => {
+    const response=axios.get(`http://localhost:3000/api/stock/getProfile/${loginUser?.uid}`);
+
+    const geminiRes=generateGeminiResponse(response)
+    console.log(geminiRes)
     // Animation for portfolio cards
     gsap.fromTo(
       ".portfolio-card",
