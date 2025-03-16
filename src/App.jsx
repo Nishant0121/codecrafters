@@ -21,6 +21,7 @@ import CurrencyConverter from "./components/CurrencyConverter";
 import StockNews from "./components/StockNews";
 import StockNewsResults from "./components/StocksNewsResults";
 import { sampleStocks } from "./Data/Stocks";
+import {sampleBonds} from "./Data/Bonds";
 import FinancialExpectations from "./components/FinancialExpectations";
 import MutualFundCreator from "./components/MFCreator";
 import InsuranceComponent from "./components/Insurance";
@@ -89,7 +90,7 @@ function App() {
             <Route path="/pay" element={<Pay />} />
             <Route
               path="/watchlist"
-              element={<Watchlist stocks={sampleStocks} />}
+              element={<Watchlist stocks={sampleStocks} bonds={sampleBonds} />}
             />
             <Route path="/watchlist/:symbol" element={<StockPage />} />
             <Route path="/sip" element={<SIPCalculator />} />
