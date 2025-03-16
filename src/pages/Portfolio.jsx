@@ -1,9 +1,8 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Calendar, Download, Printer } from "lucide-react";
 import gsap from "gsap";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,40 +20,69 @@ import { AppContext } from "@/context/appContext";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import axios from "axios";
 
+const genAI = new GoogleGenerativeAI("AIzaSyDOky3a0Mpbe13I6Zo4t-RZ-pt4F8NbG5I");
 
 export default function PortfolioPage() {
   const { loginUser } = useContext(AppContext);
+  const [gendata, setGenData] = useState({ rating: null, tipToImprove: "" });
 
   const generateGeminiResponse = async (prompt) => {
     try {
       const model = genAI.getGenerativeModel({
         model: "gemini-2.0-flash",
-        systemInstruction: "give me a json output, first field should have rating out of 100, diversification of investor profile, second field contains comments on how user can improve diversification.\ngive comments on improving investor profile",
+        systemInstruction:
+          "Provide a JSON output with two fields:\n" +
+          '- "rating": a number between 0 and 100 representing diversification score.\n' +
+          '- "tipToImprove": a short text providing suggestions to improve diversification.\n' +
+          "Ensure the output is a valid JSON object without markdown formatting.",
       });
+
       const result = await model.generateContent(prompt);
-      let response = result.response.text();
 
-      // Extract JSON from response
-      const jsonMatch = response.match(/json\s*([\s\S]*?)\s*/);
-      if (jsonMatch && jsonMatch[1]) {
-        response = jsonMatch[1];
+      // Extract text response
+      let response = await result.response.text();
+
+      // Clean JSON output
+      response = response.replace(/```json\n([\s\S]*?)\n```/, "$1").trim();
+
+      try {
+        return JSON.parse(response);
+      } catch (jsonError) {
+        console.error("Error parsing JSON:", jsonError, "Response:", response);
+        return { rating: null, tipToImprove: "Unable to fetch data" };
       }
-
-      const parsedResponse = JSON.parse(response);
-      return parsedResponse;
     } catch (error) {
       console.error("Error generating response:", error);
-      return null;
+      return {
+        rating: null,
+        tipToImprove: "Error fetching diversification analysis",
+      };
     }
   };
 
-
-
   useEffect(() => {
-    const response=axios.get(`http://localhost:3000/api/stock/getProfile/${loginUser?.uid}`);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/stock/getProfile/${loginUser?.uid}`
+        );
 
-    const geminiRes=generateGeminiResponse(response)
-    console.log(geminiRes)
+        if (!response.data) {
+          console.error("API response is empty");
+          return;
+        }
+
+        const geminiRes = await generateGeminiResponse(
+          JSON.stringify(response.data)
+        );
+        setGenData(geminiRes);
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+
+    fetchData();
+
     // Animation for portfolio cards
     gsap.fromTo(
       ".portfolio-card",
@@ -136,14 +164,17 @@ export default function PortfolioPage() {
           </CardContent>
         </Card>
 
+        {/* Dynamic Diversification Score */}
         <Card className="portfolio-card">
           <CardHeader className="pb-2">
             <CardDescription>Diversification</CardDescription>
-            <CardTitle className="text-2xl">72/100</CardTitle>
+            <CardTitle className="text-2xl">
+              {gendata.rating !== null ? `${gendata.rating}/100` : "Loading..."}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-sm text-muted-foreground">
-              Well Diversified
+              {gendata.tipToImprove || "Fetching diversification tips..."}
             </div>
           </CardContent>
         </Card>
