@@ -21,11 +21,13 @@ import CurrencyConverter from "./components/CurrencyConverter";
 import StockNews from "./components/StockNews";
 import StockNewsResults from "./components/StocksNewsResults";
 import { sampleStocks } from "./Data/Stocks";
+import {sampleBonds} from "./Data/Bonds";
 import FinancialExpectations from "./components/FinancialExpectations";
 import MutualFundCreator from "./components/MFCreator";
 import InsuranceComponent from "./components/Insurance";
 import BondsAndSecuritiesComponent from "./components/Bonds";
 import Profile from "./pages/profile";
+import OverallReport from "./components/overReport";
 import StockIndexPreview from "./components/StockIndices";
 
 function App() {
@@ -89,13 +91,14 @@ function App() {
             <Route path="/pay" element={<Pay />} />
             <Route
               path="/watchlist"
-              element={<Watchlist stocks={sampleStocks} />}
+              element={<Watchlist stocks={sampleStocks} bonds={sampleBonds} />}
             />
             <Route path="/watchlist/:symbol" element={<StockPage />} />
             <Route path="/sip" element={<SIPCalculator />} />
             <Route path="/currency" element={<CurrencyConverter />} />
             <Route path="/news" element={<StockNews />} />
             <Route path="/advisor" element={<MutualFundCreator />} />
+            <Route path="/overallreport" element={<OverallReport />} />
             <Route
               path="/news-results/:symbol"
               element={<StockNewsResults />}
