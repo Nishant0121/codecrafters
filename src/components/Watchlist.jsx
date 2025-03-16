@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import axios from "axios";
 import { AppContext } from "@/context/appContext";
 import WalletPreview from "./wallet-preview";
+import { useNavigate } from "react-router-dom";
 
 const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
   const watchlistRef = useRef(null);
@@ -13,6 +14,14 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
   const [expandedBond, setExpandedBond] = useState(null);
   const [bondQuantity, setBondQuantity] = useState(1);
   const { loginUser } = useContext(AppContext);
+  const navigate = useNavigate();
+
+  const navigateteToInsurance = () => {
+    navigate("/insurance");
+  };
+  const navigateteToBonds = () => {
+    navigate("/bonds")
+  }
 
   useEffect(() => {
     if (watchlistRef.current) {
@@ -156,6 +165,9 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
       <h1 className="text-3xl font-bold text-center text-white mb-8 tracking-wide">
         Your Stock Watchlist
       </h1>
+      
+        <button onClick={navigateteToBonds} className="bg-blue-700/10 mr-4 mb-4 border-white border-1 p-3 rounded-lg  backdrop-blur-md shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">Bonds</button>
+        <button onClick={navigateteToInsurance} className="bg-blue-500/10 mb-4 border-white border-1 p-3 rounded-lg backdrop-blur-md shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">Insurance</button>
       <div className="space-y-5" ref={watchlistRef}>
         {stocks.map((stock) => {
           const open = stock.open ?? 0;
@@ -212,7 +224,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
                 <div className="flex flex-row gap-6 items-end">
                   <div className="flex flex-col items-end">
                     <span className="text-lg font-semibold text-white">
-                      ₹
+                      $
                       {close.toLocaleString(undefined, {
                         maximumFractionDigits: 2,
                       })}
@@ -449,7 +461,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
                 <div className="flex flex-row gap-6 items-end">
                   <div className="flex flex-col items-end">
                     <span className="text-lg font-semibold text-white">
-                      ₹
+                      $
                       {bond.price.toLocaleString(undefined, {
                         maximumFractionDigits: 2,
                       })}
@@ -544,7 +556,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
                         </button>
                       </div>
                       <div className="text-sm text-gray-400">
-                        Total: ₹
+                        Total: $
                         {(bondQuantity * bond.price).toLocaleString(undefined, {
                           maximumFractionDigits: 2,
                         })}
@@ -598,7 +610,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
                         </span>{" "}
                         • Avg. cost:{" "}
                         <span className="text-blue-300 font-medium">
-                          ₹{(bond.avgCost || bond.price).toFixed(2)}
+                          ${(bond.avgCost || bond.price).toFixed(2)}
                         </span>{" "}
                         • P&L:{" "}
                         <span

@@ -1,18 +1,22 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, Wallet , LineChart } from "lucide-react";
-
+import { Menu, Wallet, LineChart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { WalletPreview } from "@/components/wallet-preview";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { AppContext } from "../context/appContext";
 import StockIndexPreview from "./StockIndices";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const { loginUser } = useContext(AppContext);
+  const { loginUser, language, setLanguage } = useContext(AppContext);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +25,12 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const navigate = useNavigate();
+
+  const NavigateToDashboard = () => {
+    navigate("/dashboard");
+  };
 
   const navItems = [
     { name: "Dashboard", href: "/dashboard" },
@@ -34,7 +44,9 @@ export function Navbar() {
     <header
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-300",
-        isScrolled ? "bg-background/80 backdrop-blur-md shadow-sm" : "bg-transparent"
+        isScrolled
+          ? "bg-background/80 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
       )}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -59,19 +71,20 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-
-        <DropdownMenu>
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="relative">
                 <LineChart className="h-7c w-7 text-green-600" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[380px] p-0" align="end" sideOffset={8}>
+            <DropdownMenuContent
+              className="w-[380px] p-0"
+              align="end"
+              sideOffset={8}
+            >
               <StockIndexPreview />
             </DropdownMenuContent>
           </DropdownMenu>
-
-
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -83,7 +96,11 @@ export function Navbar() {
                 </span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[380px] p-0" align="end" sideOffset={8}>
+            <DropdownMenuContent
+              className="w-[380px] p-0"
+              align="end"
+              sideOffset={8}
+            >
               <WalletPreview />
             </DropdownMenuContent>
           </DropdownMenu>
@@ -97,7 +114,22 @@ export function Navbar() {
               Sign In
             </Link>
           )}
-          <Button size="sm" className="hidden md:flex">
+          <div className="flex bg-black justify-end">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="px-2 py-1 border rounded bg-black"
+            >
+              <option value="en">English</option>
+              <option value="hi">हिंदी</option>
+              <option value="mr">मराठी</option>
+            </select>
+          </div>
+          <Button
+            size="sm"
+            className="hidden md:flex"
+            onClick={NavigateToDashboard}
+          >
             Get Started
           </Button>
 
@@ -111,7 +143,11 @@ export function Navbar() {
             <SheetContent side="right">
               <nav className="grid gap-6 text-lg font-medium">
                 {navItems.map((item) => (
-                  <Link key={item.name} to={item.href} className="hover:text-primary">
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="hover:text-primary"
+                  >
                     {item.name}
                   </Link>
                 ))}
@@ -124,7 +160,11 @@ export function Navbar() {
                     Sign In
                   </Link>
                 )}
-                <Button size="sm" variant="outline">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={NavigateToDashboard}
+                >
                   Get Started
                 </Button>
               </nav>
