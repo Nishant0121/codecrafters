@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Load the trained model
-model = joblib.load("stock_recommendation_model.pkl")
+model = joblib.load("stock_model.pkl")
 
 
 @app.route("/recommend", methods=["POST"])
@@ -22,8 +22,12 @@ def recommend():
         data['macd'],
         data['daily_return']
     ]
-    prediction = model.predict([features])
-    return jsonify({"recommendation": int(prediction[0])})
+    
+    prediction = model.predict([features])[0]  # Get first prediction
+    print(prediction)
+    
+    return jsonify({"recommendation": int(prediction)})  # Convert int64 to int
+
 
 
 @app.route("/predict/<symbol>", methods=["GET"])
