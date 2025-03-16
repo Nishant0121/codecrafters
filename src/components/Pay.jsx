@@ -45,10 +45,16 @@ function Pay() {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
       setAccount(accounts[0]);
 
-      const portfolioContract = new ethers.Contract(CONTRACT_ADDRESS, PortfolioABI, signer);
+      const portfolioContract = new ethers.Contract(
+        CONTRACT_ADDRESS,
+        PortfolioABI,
+        signer
+      );
       setContract(portfolioContract);
       await loadBalance(portfolioContract, accounts[0]);
     } catch (err) {
@@ -108,11 +114,17 @@ function Pay() {
     const checkWallet = async () => {
       if (window.ethereum) {
         const provider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await window.ethereum.request({ method: "eth_accounts" });
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
         if (accounts.length > 0) {
           setAccount(accounts[0]);
           const signer = await provider.getSigner();
-          const portfolioContract = new ethers.Contract(CONTRACT_ADDRESS, PortfolioABI, signer);
+          const portfolioContract = new ethers.Contract(
+            CONTRACT_ADDRESS,
+            PortfolioABI,
+            signer
+          );
           setContract(portfolioContract);
           await loadBalance(portfolioContract, accounts[0]);
         }
@@ -176,13 +188,16 @@ function Pay() {
         order_id: order.id,
         handler: async function (response) {
           try {
-            const validateRes = await fetch("http://localhost:5001/order/validate", {
-              method: "POST",
-              body: JSON.stringify(response),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
+            const validateRes = await fetch(
+              "http://localhost:5001/order/validate",
+              {
+                method: "POST",
+                body: JSON.stringify(response),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
             const validate = await validateRes.json();
             if (validate.msg === "Payment Successful") {
               const updateResponse = await axios.post(
@@ -239,12 +254,25 @@ function Pay() {
         <section className="flex-1 bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-white/20">
           <header className="text-center mb-8">
             <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <h2 className="text-3xl font-bold text-white">Add Funds</h2>
-            <p className="text-gray-300 mt-2">Secure payment powered by Razorpay</p>
+            <p className="text-gray-300 mt-2">
+              Secure payment powered by Razorpay
+            </p>
           </header>
           <form onSubmit={handlePayment}>
             <div className="mb-6">
@@ -318,10 +346,21 @@ function Pay() {
               )}
             </button>
             <p className="text-center text-gray-300 text-sm mt-4 flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
               </svg>
-              Secured by 256-bit encryption
+              Secured by RazorPay
             </p>
           </form>
         </section>
