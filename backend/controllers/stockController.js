@@ -42,6 +42,74 @@ export const addStock = async (req, res) => {
   }
 };
 
+export const addBond = async (req, res) => {
+  try {
+    const { uid, quantity, symbol, buyPrice, purchaseDate } = req.body;
+
+    let profile = await Profile.findOne({ uid });
+
+    if (!profile) {
+      profile = new Profile({
+        uid,
+        stocks: [],
+        topStocks: [],
+      });
+    }
+
+    profile.stocks.push({
+      quantity,
+      symbol,
+      buyPrice,
+      purchaseDate: purchaseDate || new Date(),
+    });
+
+    await profile.save();
+
+    let wallet = await Wallet.findOne({ uid });
+
+    res.status(200).json({ message: "Stock added successfully", profile });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const removeBond = async (req, res) => {
+  try {
+    const { uid, quantity, symbol } = req.body;
+
+    let profile = await Profile.findOne({ uid });
+
+    if (!profile) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Find stock index in the profile's stock array
+    const stockIndex = profile.stocks.findIndex(
+      (stock) => stock.symbol === symbol
+    );
+
+    if (stockIndex === -1) {
+      return res.status(404).json({ message: "Stock not found in profile" });
+    }
+
+    // Reduce quantity or remove stock completely
+    if (profile.stocks[stockIndex].quantity > quantity) {
+      profile.stocks[stockIndex].quantity -= quantity;
+    } else {
+      profile.stocks.splice(stockIndex, 1);
+    }
+
+    await profile.save();
+
+    res.status(200).json({ message: "Stock removed successfully", profile });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
 export const removeStock = async (req, res) => {
   try {
     const { uid, quantity, symbol } = req.body;
