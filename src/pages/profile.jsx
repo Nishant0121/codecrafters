@@ -49,6 +49,10 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState("overview");
   const { loginUser } = useContext(AppContext);
   const navigate = useNavigate();
+  
+  const navigateToPay = () => {
+    navigate('/pay');
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -156,7 +160,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-slate-900 text-white p-4 md:p-8">
+    <div className="min-h-screen text-white p-4 md:p-8">
       {loading ? (
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -195,7 +199,7 @@ export default function Profile() {
               <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
                 Financial Dashboard
               </h1>
-              <TabsList className="bg-white/5 border border-white/10">
+              <TabsList className="bg-white/5 border border-white/0">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-white/10">
                   Overview
                 </TabsTrigger>
@@ -213,9 +217,9 @@ export default function Profile() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Profile Card */}
                 <motion.div variants={itemVariants}>
-                  <Card className="bg-gradient-to-br from-slate-900/80 to-slate-800/80 backdrop-blur-xl border-white/10 shadow-xl overflow-hidden h-full">
+                  <Card className="bg-grey-700 backdrop-blur-xl border-white/10 shadow-xl overflow-hidden h-full">
                     <CardHeader className="pb-2">
-                      <div className="absolute top-0 right-0 left-0 h-20 bg-gradient-to-r from-blue-600/20 to-purple-600/20 blur-xl opacity-50"></div>
+                      <div className="absolute top-0 right-0 left-0 h-20 blur-xl opacity-50"></div>
                       <div className="flex flex-col items-center relative">
                         <Avatar className="w-24 h-24 border-4 border-white/10 shadow-xl">
                           <AvatarImage
@@ -267,7 +271,7 @@ export default function Profile() {
 
                 {/* Investment & Wallet Summary */}
                 <motion.div variants={itemVariants} className="md:col-span-2">
-                  <Card className="bg-gradient-to-br from-slate-900/80 to-slate-800/80 backdrop-blur-xl border-white/10 shadow-xl h-full">
+                  <Card className="bg-black backdrop-blur-xl border-white/10 shadow-xl h-full">
                     <CardHeader>
                       <CardTitle className="text-xl font-semibold flex items-center">
                         <User className="h-5 w-5 mr-2 text-blue-400" />
@@ -320,11 +324,11 @@ export default function Profile() {
                           </div>
                           
                           <div className="grid grid-cols-2 gap-4 mt-6">
-                            <Button variant="outline" className="border-white/10 hover:bg-white/5 h-10">
+                            <Button variant="outline" className="border-white/10 hover:bg-white/5 h-10" onClick={navigateToPay}>
                               <ArrowUpRight className="h-4 w-4 mr-2" />
                               Deposit
                             </Button>
-                            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-10 border-0">
+                            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-10 border-0" onClick={navigateToPay}>x
                               <ArrowRight className="h-4 w-4 mr-2" />
                               Transfer
                             </Button>
@@ -340,7 +344,7 @@ export default function Profile() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 {/* Pie Chart - Stock Distribution */}
                 <motion.div variants={itemVariants}>
-                  <Card className="bg-gradient-to-br from-slate-900/80 to-slate-800/80 backdrop-blur-xl border-white/10 shadow-xl h-full">
+                  <Card className="bg-black backdrop-blur-xl border-white/10 shadow-xl h-full">
                     <CardHeader>
                       <CardTitle className="text-xl font-semibold flex items-center">
                         <PieChartIcon className="h-5 w-5 mr-2 text-purple-400" />
@@ -385,7 +389,7 @@ export default function Profile() {
 
                 {/* Bar Chart - Transactions */}
                 <motion.div variants={itemVariants}>
-                  <Card className="bg-gradient-to-br from-slate-900/80 to-slate-800/80 backdrop-blur-xl border-white/10 shadow-xl h-full">
+                  <Card className="bg-black backdrop-blur-xl border-white/10 shadow-xl h-full">
                     <CardHeader>
                       <CardTitle className="text-xl font-semibold flex items-center">
                         <TrendingUp className="h-5 w-5 mr-2 text-blue-400" />
