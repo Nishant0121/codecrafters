@@ -239,7 +239,7 @@ export default function DashboardPage() {
                 <Wallet className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹{balance?.toFixed(2)}</div>
+                <div className="text-2xl font-bold">${balance?.toFixed(2)}</div>
                 <div className="mt-1 text-xs text-muted-foreground">
                   {getText("readyToInvest")}
                 </div>

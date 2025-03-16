@@ -12,6 +12,12 @@ import {
 } from "@/components/ui/chart"
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { sampleStocks } from "@/Data/Stocks"; // Import stock data
+
+import { useState, useEffect } from "react"
+import axios from "axios";
+
+const API_URL = "http://127.0.0.1:5000/predict";
 
 export function DiversificationAnalysis() {
   const correlationData = [
@@ -46,6 +52,27 @@ export function DiversificationAnalysis() {
     { name: "Energy", value: 7 },
     { name: "Other", value: 5 },
   ]
+
+  const [predictions, setPredictions] = useState([]);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      const fetchPredictions = async () => {
+        try {
+          const symbols = sampleStocks.map((stock) => stock.symbol); // Get all stock symbols
+  
+          const response = await axios.post(API_URL, { symbols });
+  
+          setPredictions(response.data);
+        } catch (error) {
+          console.error("Error fetching stock predictions:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchPredictions();
+    }, []);
 
   return (
     <>
