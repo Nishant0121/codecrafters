@@ -6,28 +6,39 @@ import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(),
+  plugins: [
+    react(), 
+    tailwindcss(),
     VitePWA({
-      registerType: 'autoUpdate', // Automatically update the service worker
+      registerType: "autoUpdate",
+      devOptions: {
+        enabled: true,
+      },
       manifest: {
-        name: 'My PWA App',
-        short_name: 'PWA App',
-        description: 'My awesome Progressive Web App!',
-        theme_color: '#ffffff',
+        name: "Investify",
+        short_name: "Inves",
+        description: "Cool Investing App",
+        theme_color: "#000000",
+        display: "standalone",
+        start_url: "/",
+        orientation: "portrait",
+        background_color: "#000000",
         icons: [
           {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
+            src: "/chat-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any maskable",
           },
           {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          }
-        ]
+            src: "/chat-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable",
+          },
+        ],
       },
-      // Optionally, you can add workbox options here
+     
     }),
   ],
   resolve: {

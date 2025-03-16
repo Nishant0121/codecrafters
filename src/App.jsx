@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect,useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
@@ -64,6 +64,7 @@ function App() {
           <main className="flex-1">
             <Routes>
               <Route path="/login" element={<Login />} />
+              
               <Route path="/register" element={<Register />} />
             </Routes>
           </main>
