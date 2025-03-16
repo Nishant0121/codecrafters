@@ -7,9 +7,12 @@ export const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   const [data, setData] = useState("Hello from Context!");
   const [loginUser, setloginUser] = useState(null);
+  const [language, setLanguage] = useState("en");
 
   return (
-    <AppContext.Provider value={{ data, setData, setloginUser, loginUser }}>
+    <AppContext.Provider
+      value={{ data, setData, setloginUser, loginUser, language, setLanguage }}
+    >
       {children}
     </AppContext.Provider>
   );
