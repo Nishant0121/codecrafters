@@ -1,9 +1,7 @@
-"use client"
-
 import { useEffect } from "react"
 import { Plus, Search, SlidersHorizontal, Wallet } from "lucide-react"
 import gsap from "gsap"
-
+import { Link } from "react-router-dom"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -39,10 +37,12 @@ export default function InvestmentsPage() {
           <p className="text-muted-foreground">Manage your stocks, bonds, and other investments</p>
         </div>
         <div className="flex items-center gap-4">
+          <Link to='/portfolio'>
           <Button variant="outline" size="sm">
             <Wallet className="mr-2 h-4 w-4" />
             Portfolio
           </Button>
+          </Link>
           <Button size="sm">
             <Plus className="mr-2 h-4 w-4" />
             New Investment
