@@ -17,6 +17,7 @@ import { InvestmentSuggestions } from "@/components/investments/investment-sugge
 import { OrderPanel } from "@/components/investments/order-panel";
 import { InvestmentTable } from "@/components/investments/investment-table";
 import { AppContext } from "@/context/appContext";
+import MutualFunds from "@/components/mutualfund";
 
 // Multilingual translations for English, Hindi, and Marathi
 const translations = {
@@ -202,6 +203,7 @@ export default function InvestmentsPage() {
           </Card>
 
           <InvestmentSuggestions className="investment-card" />
+          <MutualFunds />
         </div>
 
         <div className="md:col-span-2">
