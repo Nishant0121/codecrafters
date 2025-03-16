@@ -263,11 +263,11 @@ export default function DashboardPage() {
 
           <Tabs defaultValue="summary" className="space-y-4">
             <TabsList>
-              <TabsTrigger value="summary">{getText("summary")}</TabsTrigger>
+              {/* <TabsTrigger value="summary">{getText("summary")}</TabsTrigger> */}
               <TabsTrigger value="investments">
                 {getText("investments")}
               </TabsTrigger>
-              <TabsTrigger value="activity">{getText("activity")}</TabsTrigger>
+              <TabsTrigger value="summary">{getText("summary")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="summary" className="space-y-4">
@@ -275,7 +275,7 @@ export default function DashboardPage() {
                 <div className="dashboard-card col-span-7 md:col-span-4">
                   <InvestmentSummary data={investmentData} />
                 </div>
-                <div className="dashboard-card col-span-7 md:col-span-3">
+                <div className="dashboard -card col-span-7 md:col-span-3">
                   <StockNews />
                 </div>
               </div>

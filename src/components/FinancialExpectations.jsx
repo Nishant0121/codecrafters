@@ -1,9 +1,26 @@
 import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
 // Register Chart.js components
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const FinancialExpectations = ({ symbol }) => {
   const [data, setData] = useState([]);
@@ -43,45 +60,49 @@ const FinancialExpectations = ({ symbol }) => {
   if (loading) return <p className="text-center text-white">Loading...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
+  // ✅ Reverse data for "ulta" chart
+  const reversedData = [...data].reverse();
+
   // Prepare chart data for comparison
   const chartData = {
-    labels: data.map((item) => item.date),
+    labels: reversedData.map((item) => item.date),
     datasets: [
       {
         label: "Revenue (Low)",
-        data: data.map((item) => item.revenueLow),
-        borderColor: 'rgb(75, 192, 192)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        data: reversedData.map((item) => item.revenueLow),
+        borderColor: "rgb(75, 192, 192)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
         fill: true,
       },
       {
         label: "Revenue (High)",
-        data: data.map((item) => item.revenueHigh),
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        data: reversedData.map((item) => item.revenueHigh),
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
         fill: true,
       },
       {
         label: "Revenue (Avg)",
-        data: data.map((item) => item.revenueAvg),
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.2)',
+        data: reversedData.map((item) => item.revenueAvg),
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.2)",
         fill: true,
       },
     ],
   };
 
   return (
-    <div className="container mx-auto p-6  rounded-lg shadow-2xl mt-10">
-      <h1 className="text-3xl font-bold text-center text-white mb-8">Financial Expectations for {symbol}</h1>
+    <div className="container mx-auto p-6 rounded-lg shadow-2xl mt-10">
+      <h1 className="text-3xl font-bold text-center text-white mb-8">
+        Financial Expectations for {symbol}
+      </h1>
 
       {/* Flexbox container for table and chart */}
       <div className="flex flex-col lg:flex-row gap-8">
-
         {/* Financial Data Table Section */}
         <div className="flex-1 overflow-x-auto bg-white/10 rounded-lg shadow-xl">
           <table className="min-w-full table-auto text-white">
-            <thead className=" bg-white/10 text-lg">
+            <thead className="bg-white/10 text-lg">
               <tr>
                 <th className="px-6 py-4 text-left">Metric</th>
                 <th className="px-6 py-4 text-left">Low</th>
@@ -90,12 +111,21 @@ const FinancialExpectations = ({ symbol }) => {
               </tr>
             </thead>
             <tbody className="bg-white/10 text-sm">
-              {data.map((item, index) => (
-                <tr key={index} className="border-t border-gray-700 hover:bg-gray-700 transition-all">
+              {reversedData.map((item, index) => (
+                <tr
+                  key={index}
+                  className="border-t border-gray-700 hover:bg-gray-700 transition-all"
+                >
                   <td className="px-6 py-4">{item.date}</td>
-                  <td className="px-6 py-4">{item.revenueLow.toLocaleString()}</td>
-                  <td className="px-6 py-4">{item.revenueHigh.toLocaleString()}</td>
-                  <td className="px-6 py-4">{item.revenueAvg.toLocaleString()}</td>
+                  <td className="px-6 py-4">
+                    {item.revenueLow.toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4">
+                    {item.revenueHigh.toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4">
+                    {item.revenueAvg.toLocaleString()}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -104,16 +134,18 @@ const FinancialExpectations = ({ symbol }) => {
 
         {/* Financial Data Line Chart Section */}
         <div className="flex-1 bg-white/10 rounded-lg shadow-xl p-6 border-white/20">
-          <h2 className="text-xl font-semibold text-white mb-6 text-center">Revenue Comparisons (Low, High, Avg)</h2>
-          <div style={{ position: 'relative', height: '400px' }}> {/* Set height explicitly */}
-            <Line 
-              data={chartData} 
+          <h2 className="text-xl font-semibold text-white mb-6 text-center">
+            Revenue Comparisons (Low, High, Avg)
+          </h2>
+          <div style={{ position: "relative", height: "400px" }}>
+            <Line
+              data={chartData}
               options={{
-                responsive: true, 
-                maintainAspectRatio: false, // Disable aspect ratio to allow manual sizing
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                   legend: {
-                    position: 'top',
+                    position: "top",
                     labels: {
                       font: {
                         size: 14,
@@ -128,11 +160,10 @@ const FinancialExpectations = ({ symbol }) => {
                     },
                   },
                 },
-              }} 
+              }}
             />
           </div>
         </div>
-
       </div>
     </div>
   );
