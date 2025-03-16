@@ -4,6 +4,7 @@ import { Briefcase } from "lucide-react";
 import { gsap } from "gsap";
 import axios from "axios";
 import { AppContext } from "@/context/appContext";
+import WalletPreview from "./wallet-preview";
 
 const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
   const watchlistRef = useRef(null);

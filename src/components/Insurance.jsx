@@ -253,30 +253,30 @@ const InsuranceComponent = () => {
     setFilteredInsurances(filtered);
   };
 
-  const renderStarRating = (rating) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
+  // const renderStarRating = (rating) => {
+  //   const fullStars = Math.floor(rating);
+  //   const hasHalfStar = rating % 1 !== 0;
     
-    return (
-      <div className="flex items-center">
-        {[...Array(fullStars)].map((_, i) => (
-          <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-        ))}
-        {hasHalfStar && (
-          <div className="relative">
-            <Star className="w-4 h-4 text-yellow-400" />
-            <div className="absolute top-0 left-0 overflow-hidden w-1/2">
-              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-            </div>
-          </div>
-        )}
-        {[...Array(5 - fullStars - (hasHalfStar ? 1 : 0))].map((_, i) => (
-          <Star key={i + fullStars + (hasHalfStar ? 1 : 0)} className="w-4 h-4 text-gray-300" />
-        ))}
-        <span className="ml-1 text-sm text-gray-400">{rating.toFixed(1)}</span>
-      </div>
-    );
-  };
+  //   return (
+  //     <div className="flex items-center">
+  //       {[...Array(fullStars)].map((_, i) => (
+  //         <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+  //       ))}
+  //       {hasHalfStar && (
+  //         <div className="relative">
+  //           <Star className="w-4 h-4 text-yellow-400" />
+  //           <div className="absolute top-0 left-0 overflow-hidden w-1/2">
+  //             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+  //           </div>
+  //         </div>
+  //       )}
+  //       {[...Array(5 - fullStars - (hasHalfStar ? 1 : 0))].map((_, i) => (
+  //         <Star key={i + fullStars + (hasHalfStar ? 1 : 0)} className="w-4 h-4 text-gray-300" />
+  //       ))}
+  //       <span className="ml-1 text-sm text-gray-400">{rating.toFixed(1)}</span>
+  //     </div>
+  //   );
+  // };
 
   const renderInsuranceDetails = () => {
     if (!selectedInsurance) return null;
@@ -288,9 +288,9 @@ const InsuranceComponent = () => {
             <Badge variant={selectedInsurance.popular ? "default" : "outline"} className="mb-2">
               {selectedInsurance.popular ? "Popular Choice" : "Standard Plan"}
             </Badge>
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               {renderStarRating(selectedInsurance.rating)}
-            </div>
+            </div> */}
           </div>
           
           <h2 className="text-2xl font-bold">{selectedInsurance.name}</h2>
@@ -548,9 +548,9 @@ const InsuranceComponent = () => {
                     <DollarSign className="h-4 w-4 text-green-400 mr-1" />
                     <span className="text-white font-semibold">{insurance.price}</span>
                   </div>
-                  <div>
+                  {/* <div>
                     {renderStarRating(insurance.rating)}
-                  </div>
+                  </div> */}
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs text-gray-400">
                   <div className="flex items-center">
