@@ -114,7 +114,7 @@ export function Navbar() {
               Sign In
             </Link>
           )}
-          <div className="mb-4 flex bg-black justify-end">
+          <div className="flex bg-black justify-end">
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
