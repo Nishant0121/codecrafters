@@ -129,6 +129,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
         {
           uid: loginUser.uid,
           quantity,
+          price: bond.price,
           name: bond.name,
         }
       );
