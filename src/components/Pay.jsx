@@ -341,7 +341,7 @@ function Pay() {
             </button>
           </div>
 
-          <div className="mt-10">
+          <div className="">
             <WalletPreview />
           </div>
         </div>

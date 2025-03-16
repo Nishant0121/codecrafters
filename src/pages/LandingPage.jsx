@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Alternative for Next.js Link
+import { Link, Navigate } from "react-router-dom"; // Alternative for Next.js Link
 // Replace Next.js Image with a standard img tag below
 import {
   ArrowRight,
@@ -20,8 +20,15 @@ import DashboardPage from "./Dashboard";
 import {InvestmentSummary} from "../components/dashboard/investment-summary";
 import {WatchlistStocks} from "../components/dashboard/watchlist-stocks";
 import {MarketUpdates} from "../components/dashboard/market-updates";
+import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
+  
+  const navigate = useNavigate();
+
+  const NavigateToDashboard = () => {
+    navigate("/dashboard");
+  };
   return (
     <main className="overflow-hidden min-h-[90vh]">
       {/* Hero Section */}
@@ -46,7 +53,7 @@ export default function LandingPage() {
                 optimize your portfolio in real-time.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Button size="lg" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto" onClick={NavigateToDashboard}>
                   Get Started <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
                 <Button

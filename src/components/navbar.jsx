@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, Wallet , LineChart } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { WalletPreview } from "@/components/wallet-preview";
@@ -21,6 +21,12 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const navigate = useNavigate();
+
+  const NavigateToDashboard = () => {
+    navigate("/dashboard");
+  };
 
   const navItems = [
     { name: "Dashboard", href: "/dashboard" },
@@ -97,7 +103,7 @@ export function Navbar() {
               Sign In
             </Link>
           )}
-          <Button size="sm" className="hidden md:flex">
+          <Button size="sm" className="hidden md:flex" onClick={NavigateToDashboard}>
             Get Started
           </Button>
 
@@ -124,7 +130,7 @@ export function Navbar() {
                     Sign In
                   </Link>
                 )}
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="outline" onClick={NavigateToDashboard}>
                   Get Started
                 </Button>
               </nav>
