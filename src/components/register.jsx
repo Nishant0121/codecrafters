@@ -20,6 +20,7 @@ import {
   LockIcon,
   CreditCardIcon,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -196,6 +197,13 @@ export default function Register() {
         >
           {loading ? "Signing up..." : "Sign up with Google"}
         </Button>
+
+        <p className="text-center mt-6 text-gray-400 text-sm">
+          Already have an account?{" "}
+          <Link to="/login" className="text-white underline">
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );

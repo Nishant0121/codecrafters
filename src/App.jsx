@@ -1,4 +1,4 @@
-import { useContext, useEffect,useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
@@ -21,7 +21,7 @@ import CurrencyConverter from "./components/CurrencyConverter";
 import StockNews from "./components/StockNews";
 import StockNewsResults from "./components/StocksNewsResults";
 import { sampleStocks } from "./Data/Stocks";
-import {sampleBonds} from "./Data/Bonds";
+import { sampleBonds } from "./Data/Bonds";
 import FinancialExpectations from "./components/FinancialExpectations";
 import MutualFundCreator from "./components/MFCreator";
 import InsuranceComponent from "./components/Insurance";
@@ -29,6 +29,8 @@ import BondsAndSecuritiesComponent from "./components/Bonds";
 import Profile from "./pages/profile";
 import OverallReport from "./components/overReport";
 import StockIndexPreview from "./components/StockIndices";
+import LiveFaceMesh from "./components/imageClass";
+import ImageFaceMesh from "./components/imageClass";
 
 function App() {
   const { loginUser, setloginUser } = useContext(AppContext);
@@ -64,7 +66,7 @@ function App() {
           <main className="flex-1">
             <Routes>
               <Route path="/login" element={<Login />} />
-              
+
               <Route path="/register" element={<Register />} />
             </Routes>
           </main>
@@ -90,6 +92,7 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
             <Route path="/chat" element={<ChatBot />} />
             <Route path="/pay" element={<Pay />} />
+            <Route path="/live" element={<ImageFaceMesh />} />
             <Route
               path="/watchlist"
               element={<Watchlist stocks={sampleStocks} bonds={sampleBonds} />}

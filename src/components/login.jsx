@@ -16,6 +16,7 @@ import { LockIcon, MailIcon, LogOutIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [user, setUser] = useState(null);
@@ -199,6 +200,13 @@ export default function Login() {
             >
               Sign in with Google
             </Button>
+
+            <p className="text-center mt-6 text-gray-400">
+              Don't have an account?{" "}
+              <Link to="/register" className="text-blue-600 underline">
+                Register
+              </Link>
+            </p>
           </div>
         )}
       </div>
