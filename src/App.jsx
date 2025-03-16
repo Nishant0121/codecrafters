@@ -27,6 +27,7 @@ import InsuranceComponent from "./components/Insurance";
 import BondsAndSecuritiesComponent from "./components/Bonds";
 import Profile from "./pages/profile";
 import OverallReport from "./components/overReport";
+import StockIndexPreview from "./components/StockIndices";
 
 function App() {
   const { loginUser, setloginUser } = useContext(AppContext);
@@ -108,6 +109,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/insurance" element={<InsuranceComponent />} />
             <Route path="/bonds" element={<BondsAndSecuritiesComponent />} />
+            <Route path="/indices" element={<StockIndexPreview />} />
           </Routes>
         </main>
         {!hideNavbarFooter && <Footer />}
