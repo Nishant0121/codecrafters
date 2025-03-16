@@ -2,68 +2,53 @@ from flask import Flask, jsonify, request
 import yfinance as yf
 from prophet import Prophet
 import pandas as pd
-import joblib  # To load the trained model
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
-# Load the trained model
-model = joblib.load("stock_model.pkl")
-
-
-@app.route("/recommend", methods=["POST"])
-def recommend():
-    data = request.json
-    features = [
-        data['sma_50'],
-        data['sma_200'],
-        data['rsi'],
-        data['macd'],
-        data['daily_return']
-    ]
-    
-    prediction = model.predict([features])[0]  # Get first prediction
-    print(prediction)
-    
-    return jsonify({"recommendation": int(prediction)})  # Convert int64 to int
-
-
-
-@app.route("/predict/<symbol>", methods=["GET"])
-def predict_stock(symbol):
+@app.route("/predict", methods=["POST"])  # Use POST to send a list of symbols
+def predict_stocks():
     try:
-        # Download stock data for the last year
-        data = yf.download(symbol, period="1y", interval="1d")
+        request_data = request.get_json()
+        symbols = request_data.get("symbols", [])  # Get list of stock symbols
 
-        # Check if data is empty
-        if data.empty:
-            return jsonify({"error": "No data available for this symbol"}), 400
+        if not symbols:
+            return jsonify({"error": "No symbols provided"}), 400
 
-        # Prepare the data for Prophet
-        df = data.reset_index()[["Date", "Close"]]  # Prophet expects "ds" and "y" columns
-        df.columns = ["ds", "y"]  # Rename columns for Prophet
+        predictions = []
 
-        # Initialize and train Prophet model
-        prophet_model = Prophet()
-        prophet_model.fit(df)
+        for symbol in symbols:
+            try:
+                data = yf.download(symbol, period="1y", interval="1d")
 
-        # Make future predictions (7 days into the future)
-        future = prophet_model.make_future_dataframe(df, periods=7)
-        forecast = prophet_model.predict(future)
+                if data.empty:
+                    predictions.append({"stock": symbol, "error": "No data available"})
+                    continue
 
-        # Get the predicted price for the next day (the last prediction)
-        predicted_price = forecast.iloc[-1]["yhat"]
+                df = data.reset_index()[["Date", "Close"]]
+                df.columns = ["ds", "y"]  
 
-        return jsonify({
-            "stock": symbol,
-            "next_predicted_price": round(predicted_price, 2),
-            "prediction_date": str(forecast.iloc[-1]["ds"])
-        })
+                model = Prophet()
+                model.fit(df)
+
+                future = model.make_future_dataframe(periods=7)
+                forecast = model.predict(future)
+
+                predicted_price = forecast.iloc[-1]["yhat"]
+
+                predictions.append({
+                    "stock": symbol,
+                    "next_predicted_price": round(predicted_price, 2),
+                    "prediction_date": str(forecast.iloc[-1]["ds"])
+                })
+            except Exception as e:
+                predictions.append({"stock": symbol, "error": str(e)})
+
+        return jsonify(predictions)
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-
 
 if __name__ == "__main__":
     app.run(debug=True)
