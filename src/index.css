@@ -1,7 +1,7 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap'); */
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
-
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -119,6 +119,7 @@
     @apply bg-background text-foreground;
   }
 }
+
 #root {
   overflow: hidden;
   overflow-x: hidden;
@@ -132,3 +133,7 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* * {
+  font-family: 'Orbitron', sans-serif;
+} */
