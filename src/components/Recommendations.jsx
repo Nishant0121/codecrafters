@@ -39,7 +39,6 @@ export function StockRecommendations() {
     { symbol: "MCD", name: "McDonald's Corporation", description: "McDonald's is an American multinational chain of fast-food restaurants.", change: 1.68, sector: "Retail" },
     { symbol: "KO", name: "The Coca-Cola Company", description: "Coca-Cola is an American multinational corporation that manufactures beverages, primarily carbonated soft drinks.", change: 0.24, sector: "Consumer Goods" },
   ];
-  
 
   // Mock sector performance data
   const mockSectorPerformance = [
@@ -163,24 +162,24 @@ export function StockRecommendations() {
   };
 
   return (
-    <Card className="overflow-hidden border-0 bg-white/10 backdrop-blur-md text-white">
-      <div className="p-4">
-        <div className="text-xl font-semibold">Stock Recommendations</div>
+    <Card className="overflow-hidden border-0 bg-gradient-to-r from-gray-800 via-black to-gray-900 text-white shadow-lg backdrop-blur-lg">
+      <div className="p-6 space-y-6">
+        <div className="text-3xl font-semibold text-center">Stock Recommendations</div>
 
         {/* Sector Performance Section */}
         <div className="mt-4">
-          <div className="text-lg font-semibold mb-2">Sector Performance</div>
-          <div className="flex gap-4 overflow-x-auto">
+          <div className="text-lg font-semibold mb-4">Sector Performance</div>
+          <div className="flex gap-6 overflow-x-auto">
             {sectorPerformance.map((sector, index) => (
-              <div key={index} className="flex items-center gap-2 p-2 bg-white/5 rounded-lg">
-                <div className="text-sm">{sector.sector}</div>
+              <div key={index} className="flex flex-col items-center gap-2 p-4 bg-gray-700 rounded-lg shadow-md">
+                <div className="text-xl font-semibold">{sector.sector}</div>
                 <div
                   className={cn(
-                    "text-sm font-bold",
-                    sector.change > 0 ? "text-green-500" : "text-red-500"
+                    "text-lg font-bold",
+                    sector.change > 0 ? "text-green-400" : "text-red-400"
                   )}
                 >
-                  {sector.change > 0 ? `+${sector.change}` : sector.change}%
+                  {sector.change > 0 ? `+${sector.change}` : sector.change}% 
                 </div>
               </div>
             ))}
@@ -194,7 +193,7 @@ export function StockRecommendations() {
             placeholder="Search stocks..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full p-2 mb-4 rounded-md bg-white/10 text-white placeholder-gray-400"
+            className="w-full p-3 mb-4 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
@@ -203,14 +202,14 @@ export function StockRecommendations() {
           {loading ? (
             <p>Loading portfolio...</p>
           ) : error ? (
-            <p className="text-red-500">Error: {error}</p>
+            <p className="text-red-400">Error: {error}</p>
           ) : filteredRecommendations.length === 0 ? (
             <p>No recommendations at the moment.</p>
           ) : (
             filteredRecommendations.map((stock, index) => (
-              <div key={`${stock.symbol}-${index}`} className="flex items-center justify-between mb-4">
+              <div key={`${stock.symbol}-${index}`} className="flex items-center justify-between p-4 bg-gray-700 rounded-lg mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="text-lg font-semibold">{stock.name}</div>
+                  <div className="text-xl font-semibold">{stock.name}</div>
                   <Tooltip>
                     <TooltipTrigger>
                       <span className="text-sm text-gray-400">{stock.symbol}</span>
@@ -224,7 +223,7 @@ export function StockRecommendations() {
                   <div
                     className={cn(
                       "text-lg font-bold",
-                      stock.change > 0 ? "text-green-500" : "text-red-500"
+                      stock.change > 0 ? "text-green-400" : "text-red-400"
                     )}
                   >
                     {stock.change > 0 ? `+${stock.change}` : stock.change}%
@@ -232,25 +231,25 @@ export function StockRecommendations() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-6 w-6 text-gray-400 hover:text-white"
+                    className="h-8 w-8 text-gray-300 hover:text-white"
                     onClick={() => addToWatchlist(stock.symbol)}
                   >
-                    <Star className="h-4 w-4" />
+                    <Star className="h-5 w-5" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-6 w-6 text-gray-400 hover:text-white"
+                    className="h-8 w-8 text-gray-300 hover:text-white"
                     onClick={() => addToPortfolio(stock.symbol)}
                   >
-                    <Plus className="h-4 w-4" />
+                    <Plus className="h-5 w-5" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-6 w-6 text-gray-400 hover:text-white"
+                    className="h-8 w-8 text-gray-300 hover:text-white"
                   >
-                    <LineChart className="h-4 w-4" />
+                    <LineChart className="h-5 w-5" />
                   </Button>
                 </div>
               </div>
