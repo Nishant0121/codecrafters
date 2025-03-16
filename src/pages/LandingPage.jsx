@@ -16,6 +16,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FeatureHighlight } from "@/components/feature-highlight";
 import { StatsCounter } from "@/components/stats-counter";
 import { HeroAnimation } from "@/components/hero-animation";
+import DashboardPage from "./Dashboard";
+import {InvestmentSummary} from "../components/dashboard/investment-summary";
+import {WatchlistStocks} from "../components/dashboard/watchlist-stocks";
+import {MarketUpdates} from "../components/dashboard/market-updates";
 
 export default function LandingPage() {
   return (
@@ -57,13 +61,15 @@ export default function LandingPage() {
           </div>
 
           <div className="mt-16 w-full max-w-5xl overflow-hidden rounded-lg border bg-card/50 shadow backdrop-blur-sm">
-            <img
+            {/* <img
               src="/placeholder.svg?height=600&width=1200"
               width="1200"
               height="600"
               alt="Dashboard Preview"
               className="w-full"
-            />
+            /> */}
+            <MarketUpdates/>
+            <WatchlistStocks/>
           </div>
         </div>
 
