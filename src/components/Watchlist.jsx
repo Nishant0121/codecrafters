@@ -71,7 +71,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
           uid: loginUser.uid,
           quantity,
           name: bond.name,
-          buyPrice: bond.price,
+          price: Number(bond.price),
           purchaseDate: new Date(),
         }
       );
@@ -109,8 +109,8 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
           uid: loginUser.uid,
           amount: Number(stock.close * quantity),
           type: "credit",
-        }
-      );
+          }
+        );
       console.log(response2.data.message);
 
       alert(response.data.message);
@@ -128,6 +128,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
         {
           uid: loginUser.uid,
           quantity,
+          price: bond.price,
           name: bond.name,
         }
       );
@@ -156,7 +157,6 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
       </h1>
       <div className="space-y-5" ref={watchlistRef}>
         {stocks.map((stock) => {
-          console.log(bonds)
           const open = stock.open ?? 0;
           const close = stock.close ?? 0;
           const change = open !== 0 ? ((close - open) / open) * 100 : 0;
