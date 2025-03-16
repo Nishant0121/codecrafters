@@ -5,29 +5,48 @@ import pandas as pd
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  
+CORS(app)
 
-@app.route("/predict/<symbol>", methods=["GET"])
-def predict_stock(symbol):
+@app.route("/predict", methods=["POST"])  # Use POST to send a list of symbols
+def predict_stocks():
     try:
-        data = yf.download(symbol, period="1y", interval="1d")
+        request_data = request.get_json()
+        symbols = request_data.get("symbols", [])  # Get list of stock symbols
 
-        df = data.reset_index()[["Date", "Close"]]
-        df.columns = ["ds", "y"]  
+        if not symbols:
+            return jsonify({"error": "No symbols provided"}), 400
 
-        model = Prophet()
-        model.fit(df)
+        predictions = []
 
-        future = model.make_future_dataframe(periods=7)
-        forecast = model.predict(future)
+        for symbol in symbols:
+            try:
+                data = yf.download(symbol, period="1y", interval="1d")
 
-        predicted_price = forecast.iloc[-1]["yhat"]
+                if data.empty:
+                    predictions.append({"stock": symbol, "error": "No data available"})
+                    continue
 
-        return jsonify({
-            "stock": symbol,
-            "next_predicted_price": round(predicted_price, 2),
-            "prediction_date": str(forecast.iloc[-1]["ds"])
-        })
+                df = data.reset_index()[["Date", "Close"]]
+                df.columns = ["ds", "y"]  
+
+                model = Prophet()
+                model.fit(df)
+
+                future = model.make_future_dataframe(periods=7)
+                forecast = model.predict(future)
+
+                predicted_price = forecast.iloc[-1]["yhat"]
+
+                predictions.append({
+                    "stock": symbol,
+                    "next_predicted_price": round(predicted_price, 2),
+                    "prediction_date": str(forecast.iloc[-1]["ds"])
+                })
+            except Exception as e:
+                predictions.append({"stock": symbol, "error": str(e)})
+
+        return jsonify(predictions)
+
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 

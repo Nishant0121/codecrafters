@@ -26,6 +26,7 @@ import MutualFundCreator from "./components/MFCreator";
 import InsuranceComponent from "./components/Insurance";
 import BondsAndSecuritiesComponent from "./components/Bonds";
 import Profile from "./pages/profile";
+import OverallReport from "./components/overReport";
 
 function App() {
   const { loginUser, setloginUser } = useContext(AppContext);
@@ -95,6 +96,7 @@ function App() {
             <Route path="/currency" element={<CurrencyConverter />} />
             <Route path="/news" element={<StockNews />} />
             <Route path="/advisor" element={<MutualFundCreator />} />
+            <Route path="/overallreport" element={<OverallReport />} />
             <Route
               path="/news-results/:symbol"
               element={<StockNewsResults />}
