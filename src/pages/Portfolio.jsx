@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PortfolioOverview } from "@/components/portfolio/portfolio-overview";
-import { PortfolioPerformance } from "@/components/portfolio/portfolio-performance";
+import { StockRecommendations } from "@/components/portfolio/portfolio-performance";
 import { AssetAllocation } from "@/components/portfolio/asset-allocation";
 import { RiskAssessment } from "@/components/portfolio/risk-assessment";
 import { DiversificationAnalysis } from "@/components/portfolio/diversification-analysis";
@@ -123,7 +123,7 @@ export default function PortfolioPage() {
         </Card>
 
         <Card className="portfolio-card">
-          <PortfolioPerformance />
+          <StockRecommendations />
         </Card>
       </div>
 
