@@ -6,7 +6,6 @@
 
 @apply orbitron;
 
-
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -40,7 +39,6 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-
 }
 
 .dark {
@@ -122,6 +120,11 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Scrollbar width */
+::-webkit-scrollbar {
+  display: none;
 }
 
 #root {
