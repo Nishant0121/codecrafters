@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+
+# Flask cache and session files
+instance/
+*.log
+
+# IDE/editor-specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment variables
+.env
+*.env
+
+# Pip dependency logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# SQLite database
+*.sqlite3
+*.db
+
+# Python packaging files
+build/
+dist/
+*.egg-info/
