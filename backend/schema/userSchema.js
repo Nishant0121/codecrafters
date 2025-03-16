@@ -24,6 +24,14 @@ const ProfileSchema = new mongoose.Schema({
       purchaseDate: { type: Date, required: true, default: Date.now },
     },
   ],
+  bonds: [
+    {
+      quantity: { type: Number, required: true },
+      name: { type: String, required: true },
+      price: { type: Number, required: true },
+      purchaseDate: { type: Date, required: true, default: Date.now },
+    },
+  ],
 });
 
 const WalletSchema = new mongoose.Schema(

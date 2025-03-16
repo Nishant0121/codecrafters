@@ -33,7 +33,6 @@ export const addStock = async (req, res) => {
 
     await profile.save();
 
-    let wallet = await Wallet.findOne({ uid });
 
     res.status(200).json({ message: "Stock added successfully", profile });
   } catch (error) {
@@ -44,30 +43,32 @@ export const addStock = async (req, res) => {
 
 export const addBond = async (req, res) => {
   try {
-    const { uid, quantity, symbol, buyPrice, purchaseDate } = req.body;
+    const { uid, quantity, price, name } = req.body;
+    console.log("Request body:", req.body);
+
 
     let profile = await Profile.findOne({ uid });
 
     if (!profile) {
       profile = new Profile({
         uid,
-        stocks: [],
-        topStocks: [],
+        bonds: [],
+        topBonds: [],
       });
     }
 
-    profile.stocks.push({
+    profile.bonds.push({
       quantity,
-      symbol,
-      buyPrice,
-      purchaseDate: purchaseDate || new Date(),
+      name,
+      price,
+      purchaseDate: new Date(),
     });
 
     await profile.save();
 
-    let wallet = await Wallet.findOne({ uid });
 
-    res.status(200).json({ message: "Stock added successfully", profile });
+
+    res.status(200).json({ message: "Bonds added successfully", profile });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", error });
@@ -76,7 +77,7 @@ export const addBond = async (req, res) => {
 
 export const removeBond = async (req, res) => {
   try {
-    const { uid, quantity, symbol } = req.body;
+    const { uid, quantity, name } = req.body;
 
     let profile = await Profile.findOne({ uid });
 
@@ -85,8 +86,8 @@ export const removeBond = async (req, res) => {
     }
 
     // Find stock index in the profile's stock array
-    const stockIndex = profile.stocks.findIndex(
-      (stock) => stock.symbol === symbol
+    const stockIndex = profile.bonds.findIndex(
+      (bond) => bond.name === name
     );
 
     if (stockIndex === -1) {
@@ -94,10 +95,10 @@ export const removeBond = async (req, res) => {
     }
 
     // Reduce quantity or remove stock completely
-    if (profile.stocks[stockIndex].quantity > quantity) {
-      profile.stocks[stockIndex].quantity -= quantity;
+    if (profile.bonds[stockIndex].quantity > quantity) {
+      profile.bonds[stockIndex].quantity -= quantity;
     } else {
-      profile.stocks.splice(stockIndex, 1);
+      profile.bonds.splice(stockIndex, 1);
     }
 
     await profile.save();
