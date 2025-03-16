@@ -113,9 +113,9 @@ export default function DashboardPage() {
           `http://localhost:3000/api/stock/getInvestment/${loginUser.uid}`
         );
         console.log(response);
-        if (!response.ok) {
-          throw new Error("Failed to fetch investment data");
-        }
+        // if (!response.ok) {
+        //   throw new Error("Failed to fetch investment data");
+        // }
         const data = await response.json();
         setInvestmentData(data);
       } catch (err) {
@@ -148,9 +148,9 @@ export default function DashboardPage() {
         const response = await fetch(
           `http://localhost:3000/api/stock/wallet/balance/${loginUser.uid}`
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch wallet data");
-        }
+        // if (!response.ok) {
+        //   throw new Error("Failed to fetch wallet data");
+        // }
         const data = await response.json();
         setBalance(data.balance);
         setTransactions(data.transactions);
@@ -204,7 +204,7 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  ${investmentData.totalPortfolioValue.toFixed(2)}
+                  ${investmentData.totalPortfolioValue?.toFixed(2) || 0}
                 </div>
                 <div className="flex items-center text-xs text-green-500">
                   <ArrowUpRight className="mr-1 h-3 w-3" />

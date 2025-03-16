@@ -63,9 +63,9 @@ export default function Profile() {
           fetch(`http://localhost:3000/api/stock/wallet/balance/${loginUser?.uid}`),
         ]);
 
-        if (!investmentRes.ok || !profileRes.ok || !walletRes.ok) {
-          throw new Error("Failed to fetch data");
-        }
+        // if (!investmentRes.ok || !profileRes.ok || !walletRes.ok) {
+        //   throw new Error("Failed to fetch data");
+        // }
 
         const investment = await investmentRes.json();
         const profile = await profileRes.json();
