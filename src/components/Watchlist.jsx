@@ -1,49 +1,9 @@
-"use client"
-
-import { useContext, useEffect, useRef, useState } from "react"
-import { Link } from "react-router-dom"
-import {
-  Briefcase,
-  ChevronDown,
-  ChevronUp,
-  Plus,
-  Minus,
-  Info,
-  AlertCircle,
-  Search,
-  Filter,
-  SlidersHorizontal,
-  ArrowRight,
-} from "lucide-react"
-import { gsap } from "gsap"
-import axios from "axios"
-import { AppContext } from "@/context/appContext"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer"
-import { ScrollArea } from "@/components/ui/scroll-area"
-// import { useMediaQuery } from "@/hooks/use-mobile"
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { Briefcase } from "lucide-react";
+import { gsap } from "gsap";
+import axios from "axios";
+import { AppContext } from "@/context/appContext";
 
 const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
   const watchlistRef = useRef(null);
@@ -58,58 +18,12 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
       gsap.fromTo(
         watchlistRef.current.children,
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", stagger: 0.1 },
-      )
+        { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", stagger: 0.1 }
+      );
     }
 
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [])
-
-  useEffect(() => {
-    // Filter and sort stocks when stocks, searchQuery, or sortBy changes
-    let result = [...stocks]
-
-    // Apply search filter
-    if (searchQuery) {
-      result = result.filter(
-        (stock) =>
-          stock.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (stock.name && stock.name.toLowerCase().includes(searchQuery.toLowerCase())),
-      )
-    }
-
-    // Apply sorting
-    switch (sortBy) {
-      case "priceAsc":
-        result.sort((a, b) => (a.close || 0) - (b.close || 0))
-        break
-      case "priceDesc":
-        result.sort((a, b) => (b.close || 0) - (a.close || 0))
-        break
-      case "changeAsc":
-        result.sort((a, b) => {
-          const changeA = a.open !== 0 ? ((a.close - a.open) / a.open) * 100 : 0
-          const changeB = b.open !== 0 ? ((b.close - b.open) / b.open) * 100 : 0
-          return changeA - changeB
-        })
-        break
-      case "changeDesc":
-        result.sort((a, b) => {
-          const changeA = a.open !== 0 ? ((a.close - a.open) / a.open) * 100 : 0
-          const changeB = b.open !== 0 ? ((b.close - b.open) / b.open) * 100 : 0
-          return changeB - changeA
-        })
-        break
-      case "owned":
-        result.sort((a, b) => (b.quantityOwned || 0) - (a.quantityOwned || 0))
-        break
-      default:
-        // Keep original order
-        break
-    }
-
-    setFilteredStocks(result)
-  }, [stocks, searchQuery, sortBy])
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const handleToggleDropdown = (symbol) => {
     setExpandedStock(expandedStock === symbol ? null : symbol);
@@ -120,33 +34,32 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
     setBondQuantity(1); // Reset quantity on toggle
   };
   const handleBuyStock = async (quantity, stock) => {
-    if (quantity <= 0) return alert("Quantity must be greater than 0")
-    setIsLoading(true)
+    if (quantity <= 0) return alert("Quantity must be greater than 0");
     try {
-      const response = await axios.post("http://localhost:3000/api/stock/addStock", {
-        uid: loginUser.uid,
-        quantity,
-        symbol: stock.symbol,
-        buyPrice: stock.close,
-        purchaseDate: new Date(),
-      })
-      const response2 = await axios.post("http://localhost:3000/api/stock/updateWallet", {
-        uid: loginUser.uid,
-        amount: Number(stock.close * quantity),
-        type: "debit",
-      })
-      console.log(response2.data.message)
+      const response = await axios.post(
+        "http://localhost:3000/api/stock/addStock",
+        {
+          uid: loginUser.uid,
+          quantity,
+          symbol: stock.symbol,
+          buyPrice: stock.close,
+          purchaseDate: new Date(),
+        }
+      );
+      const response2 = await axios.post(
+        "http://localhost:3000/api/stock/updateWallet",
+        {
+          uid: loginUser.uid,
+          amount: Number(stock.close * quantity),
+          type: "debit",
+        }
+      );
+      console.log(response2.data.message);
 
-      alert(response.data.message)
-      // Close any open dialogs/drawers
-      setIsDialogOpen(false)
-      setIsDrawerOpen(false)
-      // Refresh the component or update state as needed
+      alert(response.data.message);
     } catch (error) {
-      console.error("Error buying stock:", error)
-      alert("Failed to buy stock.")
-    } finally {
-      setIsLoading(false)
+      console.error("Error buying stock:", error);
+      alert("Failed to buy stock.");
     }
   };
   const handleBuyBond = async (quantity, bond) => {
@@ -179,28 +92,28 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
     }
   };
   const handleSellStock = async (quantity, stock) => {
-    if (quantity <= 0) return alert("Quantity must be greater than 0")
-    if ((stock.quantityOwned || 0) < quantity) return alert("You don't own enough shares to sell this quantity")
-
-    setIsLoading(true)
+    console.log("Hello");
+    if (quantity <= 0) return alert("Quantity must be greater than 0");
     try {
-      const response = await axios.post("http://localhost:3000/api/stock/removeStock", {
-        uid: loginUser.uid,
-        quantity,
-        symbol: stock.symbol,
-      })
-      const response2 = await axios.post("http://localhost:3000/api/stock/updateWallet", {
-        uid: loginUser.uid,
-        amount: Number(stock.close * quantity),
-        type: "credit",
-      })
-      console.log(response2.data.message)
+      const response = await axios.post(
+        "http://localhost:3000/api/stock/removeStock",
+        {
+          uid: loginUser.uid,
+          quantity,
+          symbol: stock.symbol,
+        }
+      );
+      const response2 = await axios.post(
+        "http://localhost:3000/api/stock/updateWallet",
+        {
+          uid: loginUser.uid,
+          amount: Number(stock.close * quantity),
+          type: "credit",
+        }
+      );
+      console.log(response2.data.message);
 
-      alert(response.data.message)
-      // Close any open dialogs/drawers
-      setIsDialogOpen(false)
-      setIsDrawerOpen(false)
-      // Refresh the component or update state as needed
+      alert(response.data.message);
     } catch (error) {
       console.error("Error buying stock:", error);
       alert("Failed to buy stock.");
@@ -215,6 +128,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
         {
           uid: loginUser.uid,
           quantity,
+          price: bond.price,
           name: bond.name,
         }
       );
@@ -250,99 +164,117 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
           const quantityOwned = stock.quantityOwned ?? 0;
           const portfolioValue = quantityOwned * close;
 
-              return (
-                <motion.div variants={itemVariants} key={stock.symbol}>
-                  <Card className="bg-gradient-to-br from-slate-900/80 to-slate-800/80 backdrop-blur-xl border-white/10 shadow-xl overflow-hidden transition-all duration-300 hover:border-blue-500/30 group">
-                    {/* Stock Info Row */}
-                    <CardHeader className="p-5">
-                      <div
-                        className="flex justify-between items-center cursor-pointer"
-                        onClick={() => handleToggleDropdown(stock.symbol)}
-                      >
-                        {/* Symbol & Name */}
-                        <div className="flex items-center space-x-4">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 text-blue-300 group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all">
-                            <Briefcase className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <span className="text-lg font-medium text-white group-hover:text-blue-400 transition-colors">
-                              {stock.symbol}
-                            </span>
-                            {stock.name && <p className="text-xs text-gray-400">{stock.name}</p>}
-                            {quantityOwned > 0 && (
-                              <div className="mt-1 flex items-center">
-                                <span className="text-xs text-gray-300 font-medium">
-                                  You own: <span className="text-blue-300">{quantityOwned}</span> shares
-                                </span>
-                                <span className="mx-2 text-gray-500">•</span>
-                                <span className="text-xs text-gray-300 font-medium">
-                                  Value:{" "}
-                                  <span className="text-blue-300">
-                                    ₹
-                                    {portfolioValue.toLocaleString(undefined, {
-                                      maximumFractionDigits: 2,
-                                    })}
-                                  </span>
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Price & Change */}
-                        <div className="flex flex-row gap-6 items-end">
-                          <div className="flex flex-col items-end">
-                            <span className="text-lg font-semibold text-white">
-                              ₹
-                              {close.toLocaleString(undefined, {
-                                maximumFractionDigits: 2,
-                              })}
-                            </span>
-                            <Badge
-                              className={`${change >= 0 ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"} border-0`}
-                            >
-                              {change >= 0 ? (
-                                <ChevronUp className="h-3 w-3 mr-1" />
-                              ) : (
-                                <ChevronDown className="h-3 w-3 mr-1" />
-                              )}
-                              {Math.abs(change).toFixed(2)}%
-                            </Badge>
-                          </div>
-
-                          {/* View Details Link */}
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-full h-8 w-8"
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    handleStockDetails(stock)
-                                  }}
-                                >
-                                  <Info className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>View stock details</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-
-                          <Link
-                            to={`/watchlist/${stock.symbol}`}
-                            className="flex items-center text-blue-400 text-sm font-medium hover:underline transition-all bg-blue-500/10 px-3 py-1 rounded-full"
-                            onClick={(e) => e.stopPropagation()} // Prevent dropdown toggle on link click
-                          >
-                            Charts
-                            <ArrowRight className="h-3 w-3 ml-1" />
-                          </Link>
-                        </div>
+          return (
+            <div
+              key={stock.symbol}
+              className="p-5 rounded-xl bg-white/10 backdrop-blur-md shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]"
+            >
+              {/* Stock Info Row */}
+              <div
+                className="flex justify-between items-center cursor-pointer"
+                onClick={() => handleToggleDropdown(stock.symbol)}
+              >
+                {/* Symbol & Name */}
+                <div className="flex items-center space-x-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/20 text-blue-300">
+                    <Briefcase className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <span className="text-lg font-medium text-white">
+                      {stock.symbol}
+                    </span>
+                    {stock.name && (
+                      <p className="text-xs text-gray-400">{stock.name}</p>
+                    )}
+                    {quantityOwned > 0 && (
+                      <div className="mt-1 flex items-center">
+                        <span className="text-xs text-gray-300 font-medium">
+                          You own:{" "}
+                          <span className="text-blue-300">{quantityOwned}</span>{" "}
+                          shares
+                        </span>
+                        <span className="mx-2 text-gray-500">•</span>
+                        <span className="text-xs text-gray-300 font-medium">
+                          Value:{" "}
+                          <span className="text-blue-300">
+                            ₹
+                            {portfolioValue.toLocaleString(undefined, {
+                              maximumFractionDigits: 2,
+                            })}
+                          </span>
+                        </span>
                       </div>
-                    </CardHeader>
+                    )}
+                  </div>
+                </div>
+
+                {/* Price & Change */}
+                <div className="flex flex-row gap-6 items-end">
+                  <div className="flex flex-col items-end">
+                    <span className="text-lg font-semibold text-white">
+                      ₹
+                      {close.toLocaleString(undefined, {
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                    <span
+                      className={`text-sm font-medium flex items-center ${
+                        change >= 0 ? "text-green-400" : "text-red-400"
+                      }`}
+                    >
+                      {change >= 0 ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3 mr-1"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3 mr-1"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      )}
+                      {Math.abs(change).toFixed(2)}%
+                    </span>
+                  </div>
+
+                  {/* View Details Link */}
+                  <Link
+                    to={`/watchlist/${stock.symbol}`}
+                    className="flex items-center text-blue-400 text-sm font-medium hover:underline transition-all bg-blue-500/10 px-3 py-1 rounded-full"
+                    onClick={(e) => e.stopPropagation()} // Prevent dropdown toggle on link click
+                  >
+                    View Details
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 ml-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
 
               {/* Dropdown Content */}
               {expandedStock === stock.symbol && (
@@ -701,7 +633,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
         })}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Watchlist
+export default Watchlist;
