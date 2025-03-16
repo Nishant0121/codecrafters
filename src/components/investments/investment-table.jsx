@@ -1,26 +1,12 @@
 "use client";
 
 import { useState, useEffect, useContext } from "react";
-import { ArrowDown, ArrowUp, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { AppContext } from "@/context/appContext";
 import axios from "axios";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 // Hardcoded stock details
 const stockDetails = {
@@ -37,55 +23,18 @@ export function InvestmentTable({ type = "all" }) {
   const [sortColumn, setSortColumn] = useState("value");
   const [sortDirection, setSortDirection] = useState("desc");
   const { loginUser } = useContext(AppContext);
-  const user = localStorage.getItem("ADuser");
 
-  // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Display 10 items per page
-
-  const updateinvestment = async (stocks) => {
-    if (!loginUser?.uid) return; // Ensure the user is logged in
-
-    // Calculate total portfolio value as the sum of profit/loss
-    const totalPortfolioValue = stocks.reduce(
-      (sum, stock) => sum + stock.profitLoss,
-      0
-    );
-
-    const payload = {
-      uid: loginUser.uid,
-      stocks: stocks.map((stock) => ({
-        symbol: stock.symbol,
-        quantity: stock.quantity,
-        buyPrice: stock.averageCost, // Use the correct field for buy price
-        value: stock.value,
-        profitLoss: stock.profitLoss,
-      })),
-      totalPortfolioValue, // Include in the request
-    };
-
-    try {
-      await axios.post(
-        "http://localhost:3000/api/stock/updateinvestment",
-        payload
-      );
-      console.log("Investment data updated successfully");
-    } catch (error) {
-      console.error("Error updating investment:", error);
-    }
-  };
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchInvestmentData = async () => {
-      console.log(loginUser);
-
       try {
         const response = await fetch(
           `http://localhost:3000/api/stock/getProfile/${loginUser?.uid}`
         );
         const data = await response.json();
 
-        // Transform API data to match UI requirements
         const transformedData = data.profile.stocks.map((stock) => {
           const hardcoded = stockDetails[stock.symbol] || {};
 
@@ -94,7 +43,7 @@ export function InvestmentTable({ type = "all" }) {
             symbol: stock.symbol,
             name: hardcoded.name || "Unknown",
             quantity: stock.quantity,
-            price: stock.buyPrice || 0, // Use API price if available
+            price: stock.buyPrice || 0,
             averageCost: stock.buyPrice,
             value: stock.quantity * (hardcoded.price || stock.buyPrice),
             profitLoss:
@@ -107,7 +56,6 @@ export function InvestmentTable({ type = "all" }) {
         });
 
         setInvestmentData(transformedData);
-        await updateinvestment(transformedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -125,7 +73,6 @@ export function InvestmentTable({ type = "all" }) {
     }
   };
 
-  // Sort data
   const sortedData = [...investmentData].sort((a, b) => {
     if (sortDirection === "asc") {
       return a[sortColumn] - b[sortColumn];
@@ -134,119 +81,121 @@ export function InvestmentTable({ type = "all" }) {
     }
   });
 
-  // Pagination Logic
   const totalPages = Math.ceil(sortedData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = sortedData.slice(startIndex, endIndex);
 
+  // 📥 Function to Generate and Download PDF
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    autoTable(doc, {
+      // Use autoTable function correctly
+      head: [
+        [
+          "Symbol",
+          "Name",
+          "Quantity",
+          "Price",
+          "Value",
+          "P/L",
+          "Allocation (%)",
+        ],
+      ],
+      body: investmentData.map((investment) => [
+        investment.symbol,
+        investment.name,
+        investment.quantity.toLocaleString(),
+        `$${investment.price.toFixed(2)}`,
+        `$${investment.value.toFixed(2)}`,
+        `$${investment.profitLoss.toFixed(
+          2
+        )} (${investment.profitLossPercent.toFixed(2)}%)`,
+        `${investment.allocation.toFixed(2)}%`,
+      ]),
+      startY: 20,
+    });
+
+    doc.text("Investment Portfolio", 14, 10);
+    doc.save("Investment_Portfolio.pdf");
+  };
+
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Symbol</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Quantity</TableHead>
-            <TableHead
-              className="cursor-pointer"
+    <div className="rounded-md border p-4">
+      {/* 📥 PDF Download Button */}
+      <div className="flex justify-end mb-4">
+        <Button onClick={downloadPDF} className="bg-blue-500 text-white">
+          Download PDF
+        </Button>
+      </div>
+
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="border-b">
+            <th className="p-2">Symbol</th>
+            <th className="p-2">Name</th>
+            <th className="p-2">Quantity</th>
+            <th
+              className="p-2 cursor-pointer"
               onClick={() => handleSort("price")}
             >
-              <div className="flex items-center">
-                Price
-                {sortColumn === "price" && (
-                  <ChevronDown className="ml-1 h-4 w-4" />
-                )}
-              </div>
-            </TableHead>
-            <TableHead
-              className="cursor-pointer"
+              Price{" "}
+              {sortColumn === "price" && (
+                <ChevronDown className="inline h-4 w-4" />
+              )}
+            </th>
+            <th
+              className="p-2 cursor-pointer"
               onClick={() => handleSort("value")}
             >
-              <div className="flex items-center">
-                Value
-                {sortColumn === "value" && (
-                  <ChevronDown className="ml-1 h-4 w-4" />
-                )}
-              </div>
-            </TableHead>
-            <TableHead
-              className="cursor-pointer"
+              Value{" "}
+              {sortColumn === "value" && (
+                <ChevronDown className="inline h-4 w-4" />
+              )}
+            </th>
+            <th
+              className="p-2 cursor-pointer"
               onClick={() => handleSort("profitLoss")}
             >
-              <div className="flex items-center">
-                P/L
-                {sortColumn === "profitLoss" && (
-                  <ChevronDown className="ml-1 h-4 w-4" />
-                )}
-              </div>
-            </TableHead>
-            <TableHead
-              className="cursor-pointer"
-              onClick={() => handleSort("allocation")}
-            >
-              <div className="flex items-center">
-                Allocation
-                {sortColumn === "allocation" && (
-                  <ChevronDown className="ml-1 h-4 w-4" />
-                )}
-              </div>
-            </TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+              P/L{" "}
+              {sortColumn === "profitLoss" && (
+                <ChevronDown className="inline h-4 w-4" />
+              )}
+            </th>
+            <th className="p-2">Allocation</th>
+          </tr>
+        </thead>
+        <tbody>
           {paginatedData.length > 0 ? (
             paginatedData.map((investment) => (
-              <TableRow key={investment.id}>
-                <TableCell className="font-medium">
-                  {investment.symbol}
-                </TableCell>
-                <TableCell>{investment.name}</TableCell>
-                <TableCell>{investment.quantity.toLocaleString()}</TableCell>
-                <TableCell>${investment.price.toFixed(2)}</TableCell>
-                <TableCell>${investment.value.toFixed(2)}</TableCell>
-                <TableCell
-                  className={
+              <tr key={investment.id} className="border-b">
+                <td className="p-2">{investment.symbol}</td>
+                <td className="p-2">{investment.name}</td>
+                <td className="p-2">{investment.quantity.toLocaleString()}</td>
+                <td className="p-2">${investment.price.toFixed(2)}</td>
+                <td className="p-2">${investment.value.toFixed(2)}</td>
+                <td
+                  className={`p-2 ${
                     investment.profitLoss >= 0
                       ? "text-green-500"
                       : "text-red-500"
-                  }
+                  }`}
                 >
                   ${investment.profitLoss.toFixed(2)} (
                   {investment.profitLossPercent.toFixed(2)}%)
-                </TableCell>
-                <TableCell>{investment.allocation.toFixed(2)}%</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>Buy more</DropdownMenuItem>
-                      <DropdownMenuItem>Sell</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>View details</DropdownMenuItem>
-                      <DropdownMenuItem>Set alert</DropdownMenuItem>
-                      <DropdownMenuItem>Add to watchlist</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
+                </td>
+                <td className="p-2">{investment.allocation.toFixed(2)}%</td>
+              </tr>
             ))
           ) : (
-            <TableRow>
-              <TableCell colSpan="8" className="text-center py-4">
+            <tr>
+              <td colSpan="7" className="text-center py-4">
                 Loading data...
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           )}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
 
       {/* Pagination Controls */}
       <div className="flex justify-center items-center mt-4 space-x-4">
