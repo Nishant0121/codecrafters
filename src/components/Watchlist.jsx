@@ -212,7 +212,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
                 <div className="flex flex-row gap-6 items-end">
                   <div className="flex flex-col items-end">
                     <span className="text-lg font-semibold text-white">
-                      ₹
+                      $
                       {close.toLocaleString(undefined, {
                         maximumFractionDigits: 2,
                       })}
@@ -449,7 +449,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
                 <div className="flex flex-row gap-6 items-end">
                   <div className="flex flex-col items-end">
                     <span className="text-lg font-semibold text-white">
-                      ₹
+                      $
                       {bond.price.toLocaleString(undefined, {
                         maximumFractionDigits: 2,
                       })}
@@ -544,7 +544,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
                         </button>
                       </div>
                       <div className="text-sm text-gray-400">
-                        Total: ₹
+                        Total: $
                         {(bondQuantity * bond.price).toLocaleString(undefined, {
                           maximumFractionDigits: 2,
                         })}
@@ -598,7 +598,7 @@ const Watchlist = ({ stocks = [], uid, bonds = [] }) => {
                         </span>{" "}
                         • Avg. cost:{" "}
                         <span className="text-blue-300 font-medium">
-                          ₹{(bond.avgCost || bond.price).toFixed(2)}
+                          ${(bond.avgCost || bond.price).toFixed(2)}
                         </span>{" "}
                         • P&L:{" "}
                         <span
